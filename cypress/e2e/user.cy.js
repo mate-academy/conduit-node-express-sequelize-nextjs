@@ -2,9 +2,7 @@
 /// <reference types="../support" />
 
 describe('Follow/unfollow button', () => {
-  before(() => {
-
-  });
+  before(() => {});
 
   it.skip('should provide an ability to follow the another user', () => {
 
