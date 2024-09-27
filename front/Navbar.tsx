@@ -16,7 +16,8 @@ const Navbar = () => {
   const { setPage, setTab } = React.useContext(AppContext)
   const clickHandler = () => resetIndexState(setPage, setTab, loggedInUser)
   return (
-    <nav className="navbar navbar-light">
+    <nav className="navbar navbar-light"
+    data-cy="nav-bar">
       <div className="container">
         <CustomLink
           href={routes.home()}
@@ -27,13 +28,13 @@ const Navbar = () => {
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>
-            <NavLink href={routes.home()} onClick={clickHandler}>
+            <NavLink dataCy="home-link" href={routes.home()} onClick={clickHandler}>
               Home
             </NavLink>
           </NavbarItem>
           <Maybe test={loggedInUser}>
             <NavbarItem>
-              <NavLink href={routes.articleNew()}>
+              <NavLink href={routes.articleNew()} dataCy="new-article-link">
                 <i className="ion-compose" />
                 &nbsp;New Article
               </NavLink>
@@ -45,7 +46,7 @@ const Navbar = () => {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href={routes.userView(loggedInUser?.username)}>
+              <NavLink dataCy="profile-link" href={routes.userView(loggedInUser?.username)}>
                 <CustomImage
                   className="user-pic"
                   src={loggedInUser?.effectiveImage}
