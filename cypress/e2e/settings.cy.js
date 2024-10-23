@@ -11,7 +11,7 @@ describe('Settings page', () => {
   const username = faker.word.noun();
   const email = `${username}@gmail.com`;
   const password = '123qwe1234';
-  const updatePasswrod = '123qwe321';
+  const newPasswrod = '123qwe321';
   const updateUsername = `${username}1`;
   const bio = faker.word.words(2);
   const updateBio = `${bio} ${username}`;
@@ -53,7 +53,7 @@ describe('Settings page', () => {
 
   it('should provide an ability to update password', () => {
     homePage.clickOnSettingsLink();
-    homePage.fillUpdateSettingPassword(updatePasswrod);
+    homePage.fillUpdateSettingPassword(newPasswrod);
     homePage.clickOnUpdateSettingsBtn();
   });
 

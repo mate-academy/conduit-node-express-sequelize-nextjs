@@ -12,7 +12,7 @@ class HomePageObject extends PageObject {
       .should('contain', username);
   }
   get settingsLink() {
-    return cy.getByDataCy('user-seting-link');
+    return cy.getByDataCy('user-setting-link');
   }
   clickOnSettingsLink() {
     this.settingsLink.click();
