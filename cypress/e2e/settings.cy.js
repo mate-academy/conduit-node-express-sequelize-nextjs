@@ -38,7 +38,7 @@ describe('Settings page', () => {
     settingsPage.userNameField.clear();
     settingsPage.typeUserName(newName);
     settingsPage.userNameField.should('have.value', newName);
-    settingsPage.bioField.should('contain.text', '');
+    settingsPage.bioField.should('have.value', '');
     settingsPage.typeBio(newBio);
     settingsPage.bioField.should('contain.text', newBio);
     settingsPage.emailField.should('have.value', user.email);
