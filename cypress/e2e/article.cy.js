@@ -1,11 +1,21 @@
+/*eslint-disable*/
 /// <reference types="cypress" />
 /// <reference types="../support" />
 
-import ArticlePageObject
-  from '../support/pages/article.pageObject';
+import ArticlePageObject from '../support/pages/article.pageObject';
 import { faker } from '@faker-js/faker';
 
 const articlePage = new ArticlePageObject();
+
+Cypress.Commands.add('login', (username, password) => {
+  cy.request('POST', '/api/users', {
+    user: {
+      username,
+      email: faker.internet.email(), // Make sure this is valid!
+      password,
+    },
+  });
+});
 
 describe('Article Management', () => {
   before(() => {
