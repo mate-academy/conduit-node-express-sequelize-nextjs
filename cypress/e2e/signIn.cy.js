@@ -23,7 +23,7 @@ describe('Sign In Page', () => {
 
   it('should provide an ability to log in with existing credentials', () => {
     signInPage.visit();
-    cy.register(user.email, user.username, user.password);
+    cy.register(user.username, user.password, user.email);
 
     signInPage.typeEmail(user.email);
     signInPage.typePassword(user.password);
@@ -34,15 +34,14 @@ describe('Sign In Page', () => {
 
   it('should not provide an ability to log in with wrong credentials', () => {
     signInPage.visit();
-    
+
     signInPage.typeEmail('wrong-email@example.com');
     signInPage.typePassword('wrongPassword123');
     signInPage.clickSignInBtn();
 
-    // 🔹 Assert error message is displayed
-    cy.contains(
-      '.error-message',
-      'Invalid email or password'
-    ).should('be.visible');
+    // Assert error message is displayed
+    cy.contains('.error-message', 'Invalid email or password').should(
+      'be.visible'
+    );
   });
 });

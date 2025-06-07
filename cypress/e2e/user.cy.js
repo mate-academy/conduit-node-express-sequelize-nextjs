@@ -7,7 +7,7 @@ const profilePage = new ProfilePageObject();
 
 describe('Follow/unfollow button', () => {
   before(() => {
-    cy.login('testuser', 'TestPassword123');
+    cy.login('riot', '12345Qwert!', 'riot@qa.team');
     profilePage.visitAnotherUser('anotherUser');
   });
 

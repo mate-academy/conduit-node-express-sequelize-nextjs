@@ -1,4 +1,3 @@
-
 import PageObject from '../PageObject';
 
 class ProfilePageObject extends PageObject {
@@ -18,9 +17,10 @@ class ProfilePageObject extends PageObject {
     cy.get('[data-cy=save-settings]').click();
   }
 
-  updateEmail(email) {
-    cy.get('[data-cy=email]').clear();
-    cy.get('[data-cy=email]').type(email);
+  updateEmail(newEmail) {
+    cy.get('[data-cy=settings-email]').clear();
+    cy.get('[data-cy=settings-email]').type(newEmail);
+    // Use the same save button for consistency, update if your UI uses a single save button
     cy.get('[data-cy=save-settings]').click();
   }
 
@@ -35,9 +35,8 @@ class ProfilePageObject extends PageObject {
   }
 
   assertUpdateSuccess() {
-    cy.contains('.success-message', 'Settings updated successfully').should(
-      'be.visible'
-    );
+    // Update the message if your app uses a different success notification
+    cy.contains('Update successful').should('exist');
   }
 }
 

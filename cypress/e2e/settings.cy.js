@@ -9,7 +9,7 @@ const profilePage = new ProfilePageObject();
 describe('Settings Page', () => {
   before(() => {
     cy.task('db:clear'); // Clear database before tests
-    cy.login('testuser', 'TestPassword123');
+    cy.login('riot', '12345Qwert!', 'riot@qa.team');
     profilePage.visit();
   });
 
@@ -29,7 +29,8 @@ describe('Settings Page', () => {
   });
 
   it('should provide an ability to update password', () => {
-    profilePage.updatePassword('TestPassword123', faker.internet.password());
+    // Use the correct current password for the user
+    profilePage.updatePassword('12345Qwert!', faker.internet.password());
     profilePage.assertUpdateSuccess();
   });
 
