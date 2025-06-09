@@ -2,27 +2,25 @@ import PageObject from '../PageObject';
 
 class ArticlePageObject extends PageObject {
   visit() {
-    cy.visit('/articles');
+    cy.visit('/editor');
   }
 
   createArticle({ title, description, body }) {
-    cy.contains('New Article').click();
     cy.get('[data-cy=title]').type(title);
     cy.get('[data-cy=description]').type(description);
     cy.get('[data-cy=body]').type(body);
-    cy.contains('Publish').click();
+    cy.get('[data-cy=publish]').click();
   }
 
-  editArticle(newTitle) {
-    cy.contains('.article-title', newTitle).click();
-    cy.contains('Edit').click();
+  editArticle() {
+    cy.get('[data-cy=edit-article]').click();
     cy.get('[data-cy=title]').clear();
-    cy.get('[data-cy=title]').type(newTitle);
+    cy.get('[data-cy=title]').type('Your new title here');
     cy.contains('Save Changes').click();
   }
 
   deleteArticle() {
-    cy.contains('Delete').click();
+    cy.getByDataCy('delete-article').click();
   }
 
   assertArticleExists(title) {

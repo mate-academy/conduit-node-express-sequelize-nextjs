@@ -1,8 +1,8 @@
 import PageObject from '../PageObject';
 
 class ProfilePageObject extends PageObject {
-  visit() {
-    cy.visit('/settings');
+  visit(username) {
+    cy.visit(`/profile/${username}`);
   }
 
   updateBio(bio) {
@@ -20,7 +20,6 @@ class ProfilePageObject extends PageObject {
   updateEmail(newEmail) {
     cy.get('[data-cy=settings-email]').clear();
     cy.get('[data-cy=settings-email]').type(newEmail);
-    // Use the same save button for consistency, update if your UI uses a single save button
     cy.get('[data-cy=save-settings]').click();
   }
 
@@ -28,6 +27,10 @@ class ProfilePageObject extends PageObject {
     cy.get('[data-cy=old-password]').type(oldPassword);
     cy.get('[data-cy=new-password]').type(newPassword);
     cy.get('[data-cy=save-settings]').click();
+    cy.contains(
+      '.success-message',
+      'Password updated successfully'
+    ).should('exist');
   }
 
   logout() {
@@ -35,8 +38,7 @@ class ProfilePageObject extends PageObject {
   }
 
   assertUpdateSuccess() {
-    // Update the message if your app uses a different success notification
-    cy.contains('Update successful').should('exist');
+    cy.contains('.success-message', 'Update successful').should('exist');
   }
 }
 

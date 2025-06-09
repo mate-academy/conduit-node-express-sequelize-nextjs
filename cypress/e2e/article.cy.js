@@ -24,7 +24,7 @@ describe('Article Management', () => {
     articlePage.assertArticleExists()
   })
 
-  it('should be edited using Edit button', () => {
+  it('should be edited using CustomLink', () => {
     articlePage.editArticle(faker.lorem.words(6))
     articlePage.assertArticleUpdated()
   })
