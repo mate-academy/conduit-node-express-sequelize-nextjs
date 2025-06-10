@@ -47,7 +47,7 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'login',
   (username = 'riot', password = '12345Qwert!', email = 'riot@qa.team') => {
-    cy.request('POST', '/api/users', {
+    cy.request('POST', '/api/users/login', {
       user: {
         username,
         email,
