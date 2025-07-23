@@ -57,7 +57,6 @@ const LoginForm = ({ register = false }) => {
             <fieldset className="form-group">
               <input
                 className="form-control form-control-lg"
-                data-cy="username-input"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -68,7 +67,7 @@ const LoginForm = ({ register = false }) => {
           <fieldset className="form-group">
             <input
               className="form-control form-control-lg"
-              data-cy="email-input"
+              data-cy="email-sign-in"
               type="email"
               placeholder="Email"
               value={email}
@@ -78,7 +77,7 @@ const LoginForm = ({ register = false }) => {
           <fieldset className="form-group">
             <input
               className="form-control form-control-lg"
-              data-cy="password-input"
+              data-cy="password-sign-in"
               type="password"
               placeholder="Password"
               value={password}
