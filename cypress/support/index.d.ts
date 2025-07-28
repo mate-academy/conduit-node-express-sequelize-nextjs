@@ -5,6 +5,5 @@ declare namespace Cypress {
     getByDataCy(selector: string): Chainable<any>
     register(email: string, username: string, password: string): Chainable<any>
     login(email: string, username: string, password: string): Chainable<any>
-    logout(): Chainable<any>
   }
 }
