@@ -1,16 +1,29 @@
-import PageObject from '../PageObject';
-
-class HomePageObject extends PageObject {
-  url = '/#/';
-
-  get usernameLink() {
-    return cy.getByDataCy('profile-link');
+export class SettingsPage {
+  visit() {
+    cy.visit('/settings');
   }
 
-  assertHeaderContainUsername(username) {
-    this.usernameLink
-      .should('contain', username);
+  getUsernameInput() {
+    return cy.get('input[placeholder="Username"]');
+  }
+
+  getEmailInput() {
+    return cy.get('input[placeholder="Email"]');
+  }
+
+  getPasswordInput() {
+    return cy.get('input[placeholder="New Password"]');
+  }
+
+  getBioTextarea() {
+    return cy.get('textarea[placeholder="Short bio about you"]');
+  }
+
+  getUpdateButton() {
+    return cy.contains('button', 'Update Settings');
+  }
+
+  getLogoutButton() {
+    return cy.contains('button', 'Or click here to logout.');
   }
 }
-
-export default HomePageObject;
