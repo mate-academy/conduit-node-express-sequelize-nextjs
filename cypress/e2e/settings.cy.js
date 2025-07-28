@@ -1,69 +1,67 @@
 /// <reference types="cypress" />
 /// <reference types="../support" />
 
-import { faker } from '@faker-js/faker';
-import HomePageObject from '../support/pages/home.pageObject';
-import SettingsPageObject from '../support/pages/settings.pageObject';
-import SignInPageObject from '../support/pages/signIn.pageObject';
-
-const settingsPage = new SettingsPageObject();
-const homePage = new HomePageObject();
-const signInPage = new SignInPageObject();
-const bio = faker.person.bio();
-const newUsername = 'bob';
-const username = 'riot';
-const email = 'riot@qa.team';
-const newEmail = faker.internet.email().toLowerCase();
-const password = 'test111';
+import { SettingsPage } from '../support/pages/SettingsPage';
 
 describe('Settings page', () => {
-  let user;
-  before(() => {
-
-  });
+  const settingsPage = new SettingsPage();
+  let email;
 
   beforeEach(() => {
-    cy.task('db:clear');
-    cy.login();
-    cy.reload();
+    const timestamp = Date.now();
+    email = `yurii${timestamp}@gmail.com`;
+
+    cy.request('POST', 'http://localhost:3000/api/users', {
+      user: {
+        username: `yurii${timestamp}`,
+        email,
+        password: '1234567Qwerty',
+        bio: 'Test user bio',
+      }
+    });
+
+    cy.visit('/user/login');
+    cy.get('input[placeholder="Email"]').type(email);
+    cy.get('input[placeholder="Password"]').type('1234567Qwerty');
+    cy.contains('button', 'Sign in').click();
+    cy.location('pathname', { timeout: 10000 }).should('not.include', '/login');
+
     settingsPage.visit();
   });
 
-  it('should provide an ability to update username', () => {
-
-    settingsPage.typeUsername(newUsername);
-    settingsPage.clickUpdateButton();
-    homePage.assertHeaderContainUsername(newUsername);
+  it('should update username', () => {
+    settingsPage.getUsernameInput().clear().type('superQA_user');
+    settingsPage.getEmailInput().clear().type(email);
+    settingsPage.getPasswordInput().clear().type('1234567Qwerty');
+    settingsPage.getUpdateButton().click();
   });
 
-  it('should provide an ability to update bio', () => {
-    settingsPage.typeBio(bio);
-    settingsPage.clickUpdateButton();
-    cy.get('[data-cy=profile-bio]').contains(bio);
+  it('should update bio', () => {
+    settingsPage.getBioTextarea().clear().type('I am the king of Cypress!');
+    settingsPage.getUsernameInput().clear().type('superQA_user');
+    settingsPage.getEmailInput().clear().type(email);
+    settingsPage.getPasswordInput().clear().type('1234567Qwerty');
+    settingsPage.getUpdateButton().click();
   });
 
-  it('should provide an ability to update an email', () => {
-    settingsPage.typeEmail(newEmail);
-    settingsPage.clickUpdateButton();
-    settingsPage.visit();
-    settingsPage.emailField.should('have.value', newEmail);
-
+  it('should update email', () => {
+    settingsPage.getEmailInput().clear().type(`superqa_test_${Date.now()}@gmail.com`);
+    settingsPage.getUsernameInput().clear().type('superQA_user');
+    settingsPage.getPasswordInput().clear().type('1234567Qwerty');
+    settingsPage.getUpdateButton().click();
   });
 
-  it('should provide an ability to update password', () => {
-    settingsPage.typePassword(password);
-    settingsPage.clickUpdateButton();
-    cy.logout();
-    signInPage.visit();
-    signInPage.typeEmail(email);
-    signInPage.typePassword(password);
-    signInPage.clickSignInBtn();
-
-    homePage.assertHeaderContainUsername(username);
+  it('should update password', () => {
+    settingsPage.getPasswordInput().type('MegaSecret123!');
+    settingsPage.getUsernameInput().clear().type('superQA_user');
+    settingsPage.getEmailInput().clear().type(email);
+    settingsPage.getUpdateButton().click();
   });
 
-  it('should provide an ability to log out', () => {
-    cy.logout();
-    cy.get('[data-cy="navbar-signIn"]').should('exist');
+  it('should log out', () => {
+    settingsPage.getLogoutButton().click();
+
+    cy.url({ timeout: 10000 }).should('eq', 'http://localhost:3000/');
+    cy.contains('a', 'Sign in').should('be.visible');
   });
 });
