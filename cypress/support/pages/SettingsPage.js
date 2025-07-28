@@ -1,29 +1,31 @@
-export class SettingsPage {
-  visit() {
-    cy.visit('/settings');
+import PageObject from '../PageObject';
+
+class SignInPageObject extends PageObject {
+  url = '/user/login';
+
+  get emailField() {
+    return cy.getByDataCy('email-sign-in');
   }
 
-  getUsernameInput() {
-    return cy.get('input[placeholder="Username"]');
+  get passwordField() {
+    return cy.getByDataCy('password-sign-in');
   }
 
-  getEmailInput() {
-    return cy.get('input[placeholder="Email"]');
+  get signInBtn() {
+    return cy.getByDataCy('sign-in-btn');
   }
 
-  getPasswordInput() {
-    return cy.get('input[placeholder="New Password"]');
+  typeEmail(email) {
+    this.emailField.type(email);
   }
 
-  getBioTextarea() {
-    return cy.get('textarea[placeholder="Short bio about you"]');
+  typePassword(password) {
+    this.passwordField.type(password);
   }
 
-  getUpdateButton() {
-    return cy.contains('button', 'Update Settings');
-  }
-
-  getLogoutButton() {
-    return cy.contains('button', 'Or click here to logout.');
+  clickSignInBtn() {
+    this.signInBtn.click();
   }
 }
+
+export default SignInPageObject;
