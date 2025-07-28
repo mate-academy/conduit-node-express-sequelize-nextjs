@@ -1,44 +1,24 @@
 import PageObject from '../PageObject';
 
- class SettingsPageObject extends PageObject {
+class SettingsPageObject extends PageObject {
   url = '/settings';
-  get nameField(){
-    return cy.get('[placeholder=Username]');
-  }
-  get emailField(){
-    return cy.get('[data-cy=settingsPage-profile-email]');
-  }
-  get passwordField(){
-    return cy.get('[data-cy=settingsPage-profile-password]');
+
+  get updateSettingsBtn() {
+    return cy.contains('button', 'Update Settings');
   }
 
-  get bioField(){
-    return cy.get('[placeholder="Short bio about you"]');
+  changeItem(placeholder, newValue) {
+    cy.get(`[placeholder="${placeholder}"]`).as('input');
+    cy.get('@input').clear();
+    cy.get('@input').type(newValue);
   }
 
-  get updateButton(){
-    return cy.get('.btn-primary');
+  checkUrl(username) {
+    cy.url().should('include', `/profile/${username}`);
   }
 
-
-  typeUsername (username){
-    this.nameField.clear();
-    this.nameField.type(username);
-  }
-
-  typeEmail (email){
-    this.emailField.clear();
-    this.emailField.type(email);
-  }
-  typePassword (pass){
-    this.passwordField.type(pass);
-  }
-  typeBio (bio){
-    this.bioField.type(bio);
-  }
-
-  clickUpdateButton(){
-    this.updateButton.click();
+  clickOnUpdateSettingsBtn() {
+    this.updateSettingsBtn.click();
   }
 }
 
