@@ -16,7 +16,7 @@ describe('Settings page', () => {
       cy.login(
         generateUser.email,
         generateUser.username,
-        generateUser.password
+        generateUser.password,
       );
       user = generateUser;
       cy.then(() => {
