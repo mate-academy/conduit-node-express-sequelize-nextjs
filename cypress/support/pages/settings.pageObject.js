@@ -12,8 +12,7 @@ class SettingsPageObject extends PageObject {
   }
 
   changeInput(dataCy, newValue) {
-    cy.get(`[data-cy=${dataCy}]`).clear();
-    cy.get(`[data-cy=${dataCy}]`).type(newValue);
+    cy.get(`[data-cy=${dataCy}]`).clear().type(newValue);
   }
 
   assertInputValue(dataCy, expectedValue) {
@@ -28,12 +27,8 @@ class SettingsPageObject extends PageObject {
     this.updateSettingsBtn.click();
   }
 
-  clickOnLogoutBtn() {
-    this.logoutBtn.click();
-  }
-
   logout() {
-    this.clickOnLogoutBtn();
+    this.logoutBtn.click();
   }
 }
 

@@ -1,3 +1,7 @@
+// cypress/e2e/settings.cy.js
+/// <reference types='cypress' />
+/// <reference types='../support' />
+
 import { faker } from '@faker-js/faker';
 import SettingsPage from '../support/pages/settings.pageObject';
 
@@ -62,7 +66,6 @@ describe('Settings page', () => {
     settingsPage.logout();
 
     cy.login(user.email, user.username, user.password, { expectFailure: true });
-
     cy.login(user.email, user.username, newPass);
     cy.get('[data-cy=header-username]').should('contain.text', user.username);
   });
