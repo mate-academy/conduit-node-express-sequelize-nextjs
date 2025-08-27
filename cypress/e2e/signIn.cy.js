@@ -2,21 +2,21 @@
 /// <reference types='../support' />
 
 import SignInPageObject from '../support/pages/signIn.pageObject';
-import homePageObject from '../support/pages/home.pageObject';
+import HomePageObject from '../support/pages/home.pageObject';
+
+import { faker } from '@faker-js/faker';
 
 const signInPage = new SignInPageObject();
-const homePage = new homePageObject();
+const homePage = new HomePageObject();
 
 describe('Sign In page', () => {
   let user;
 
   before(() => {
     cy.task('db:clear');
-    cy.task('generateUser').then((generateUser) => {
-      user = generateUser;
-    });
+    cy.task('generateUser').then((u) => { user = u; });
   });
-  
+
   it('should provide an ability to log in with existing credentials', () => {
     signInPage.visit();
     cy.register(user.email, user.username, user.password);
@@ -29,6 +29,15 @@ describe('Sign In page', () => {
   });
 
   it('should not provide an ability to log in with wrong credentials', () => {
+    signInPage.visit();
+    cy.register(user.email, user.username, user.password);
 
+    signInPage.typeEmail(user.email);
+    signInPage.typePassword(faker.internet.password({ length: 12 }));
+    signInPage.clickSignInBtn();
+
+    signInPage.errorList
+      .should('be.visible')
+      .and('contain.text', 'email or password is invalid');
   });
 });
