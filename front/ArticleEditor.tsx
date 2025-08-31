@@ -73,6 +73,18 @@ export default function ArticleEditorHoc(isnew = false) {
     const removeTag = (tag) => dispatch({ type: 'REMOVE_TAG', tag: tag })
     const handleSubmit = async (e) => {
       e.preventDefault()
+      if (posting.title.trim() === '') {
+        setErrors(['Article title cannot be empty']);
+        return;
+      }
+      if (posting.description.trim() === '') {
+        setErrors(['Article description cannot be empty']);
+        return;
+      }
+      if (posting.body.trim() === '') {
+        setErrors(['Article body cannot be empty']);
+        return;
+      }
       setLoading(true)
       let data, status
       if (isnew) {
