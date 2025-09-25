@@ -29,10 +29,15 @@ module.exports = (sequelize) => {
               'less than 40 characters.',
           },
           is: {
+testing
             args: /^[A-Za-z][A-Za-z0-9-_]+$/i,
             msg:
               'Username must start with a letter, have no spaces, and be 2 - ' +
               '40 characters.',
+
+            args: /^[A-Za-z][A-Za-z0-9-_]+$/i, // must start with letter and only have letters, numbers, dashes
+            msg: 'Username must start with a letter, have no spaces, and be 2 - 40 characters.',
+ next
           },
         },
       },
