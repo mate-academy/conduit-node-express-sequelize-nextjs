@@ -1,11 +1,123 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize, Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const config = require('../front/config');
 
 module.exports = (sequelize) => {
-  const User = sequelize.define('User', {
-    username: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false },
-    password: { type: DataTypes.STRING, allowNull: false },
-  });
+  let User = sequelize.define(
+    'User',
+    {
+      username: {
+        type: DataTypes.STRING,
+        set(v) {
+          this.setDataValue('username', v.toLowerCase());
+        },
+        unique: {
+          msg: 'This username is taken.',
+        },
+        validate: {
+          min: {
+            args: 3,
+            msg:
+              'Username must start with a letter, have no spaces, and be at ' +
+              'least 3 characters.',
+          },
+          max: {
+            args: 40,
+            msg:
+              'Username must start with a letter, have no spaces, and be ' +
+              'less than 40 characters.',
+          },
+          is: {
+            args: /^[A-Za-z][A-Za-z0-9-_]+$/i,
+            msg:
+              'Username must start with a letter, have no spaces, and be 2 - ' +
+              '40 characters.',
+          },
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        set(v) {
+          this.setDataValue('email', v.toLowerCase());
+        },
+        unique: {
+          msg: 'This email is taken.',
+        },
+        validate: {
+          isEmail: {
+            msg: 'This email does not seem valid.',
+          },
+          max: {
+            args: 254,
+            msg: 'This email is too long, the maximum size is 254 characters.',
+          },
+        },
+      },
+      bio: DataTypes.STRING,
+      image: DataTypes.STRING,
+      hash: DataTypes.STRING(1024),
+      salt: DataTypes.STRING,
+      ip: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+    },
+    {
+      indexes: [{ fields: ['username'] }, { fields: ['email'] }],
+    }
+  );
+
+  User.prototype.generateJWT = function () {
+    let today = new Date();
+    let exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+    return jwt.sign(
+      {
+        id: this.id,
+        username: this.username,
+        exp: parseInt(exp.getTime() / 1000),
+      },
+      config.secret
+    );
+  };
+
+  User.prototype.toAuthJSON = function () {
+    return {
+      username: this.username,
+      email: this.email,
+      token: this.generateJWT(),
+      bio: this.bio === undefined ? '' : this.bio,
+      image: this.image === undefined ? '' : this.image,
+    };
+  };
+
+  User.prototype.toProfileJSONFor = async function (user) {
+    return {
+      username: this.username,
+      bio: this.bio === undefined ? '' : this.bio,
+      image:
+        this.image ||
+        'https://static.productionready.io/images/smiley-cyrus.jpg',
+      following: user ? await user.hasFollow(this.id) : false,
+    };
+  };
+
+  // ... inne metody jak findAndCountArticlesByFollowed, getArticleCountByFollowed itp.
+
+  User.validPassword = function (user, password) {
+    let hash = crypto
+      .pbkdf2Sync(password, user.salt, 10000, 512, 'sha512')
+      .toString('hex');
+    return user.hash === hash;
+  };
+
+  User.setPassword = function (user, password) {
+    user.salt = crypto.randomBytes(16).toString('hex');
+    user.hash = crypto
+      .pbkdf2Sync(password, user.salt, 10000, 512, 'sha512')
+      .toString('hex');
+  };
 
   return User;
 };
