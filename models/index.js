@@ -8,7 +8,7 @@ const { DatabaseError } = require('sequelize');
 
 function getSequelize(toplevelDir, toplevelBasename) {
   const sequelizeParams = {
-    logging: config.verbose ? console.log : false,
+    logging: config.verbose ? 
     define: {
       freezeTableName: true,
     },

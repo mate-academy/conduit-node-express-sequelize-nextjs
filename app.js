@@ -99,7 +99,7 @@ async function start(port, startNext, cb) {
     if (err instanceof sequelize.Sequelize.ValidationError) {
       if (!config.isProduction) {
         // The fuller errors can be helpful during development.
-        console.error(err);
+        error(err);
       }
       const errors = {};
       for (let errItem of err.errors) {
@@ -144,7 +144,7 @@ async function start(port, startNext, cb) {
 
 if (require.main === module) {
   start(config.port, true, (server) => {
-    console.log('Listening on: http://localhost:' + server.address().port);
+  ('Listening on: http://localhost:' + server.address().port);
   });
 }
 

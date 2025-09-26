@@ -23,11 +23,30 @@ async function initDb() {
 async function generateDemoData() {
   const { sequelize, User, Article } = await initDb();
 
-  const alice = await User.create({ username: 'alice', email: 'alice@test.com', password: '123' });
-  const bob = await User.create({ username: 'bob', email: 'bob@test.com', password: '123' });
+  const alice = await User.create({
+    username: 'alice',
+    email: 'alice@test.com',
+    password: '123'
+  });
 
-  await Article.create({ title: 'Article 1', description: 'Desc 1', body: 'Body 1', authorId: alice.id });
-  await Article.create({ title: 'Article 2', description: 'Desc 2', body: 'Body 2', authorId: bob.id });
+  const bob = await User.create({
+    username: 'bob',
+    email: 'bob@test.com',
+    password: '123'
+  });
+
+  await Article.create({
+    title: 'Article 1',
+    description: 'Desc 1',
+    body: 'Body 1',
+    authorId: alice.id
+  });
+  await Article.create({
+    title: 'Article 2',
+    description: 'Desc 2',
+    body: 'Body 2',
+    authorId: bob.id
+  });
 
   return { sequelize, User, Article, alice, bob };
 }

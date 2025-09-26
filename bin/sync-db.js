@@ -35,8 +35,8 @@
         env,
       }
     );
-    console.error(out.stdout.toString());
-    console.error(out.stderr.toString());
+    error(out.stdout.toString());
+    error(out.stderr.toString());
     process.exit(out.status);
   }
 })();
