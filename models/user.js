@@ -1,6 +1,14 @@
+ testing
 const { DataTypes, Sequelize, Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+=======
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const Sequelize = require('sequelize');
+const { DataTypes, Op } = Sequelize;
+
+ next
 const config = require('../front/config');
 
 module.exports = (sequelize) => {
@@ -106,9 +114,89 @@ testing
         'https://static.productionready.io/images/smiley-cyrus.jpg',
       following: user ? await user.hasFollow(this.id) : false,
     };
+ testing
   };
 
   // ... inne metody jak findAndCountArticlesByFollowed, getArticleCountByFollowed itp.
+=======
+    return data;
+  };
+
+  User.prototype.findAndCountArticlesByFollowed = async function (
+    offset,
+    limit
+  ) {
+    return sequelize.models.Article.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      subQuery: false,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: sequelize.models.User,
+          as: 'author',
+          required: true,
+          include: [
+            {
+              model: sequelize.models.UserFollowUser,
+              on: {
+                followId: { [Op.col]: 'author.id' },
+              },
+              attributes: [],
+              where: { userId: this.id },
+            },
+          ],
+        },
+      ],
+    });
+  };
+
+  User.prototype.findAndCountArticlesByFollowedToJson = async function (
+    offset,
+    limit
+  ) {
+    const { count: articlesCount, rows: articles } =
+      await this.findAndCountArticlesByFollowed(offset, limit);
+    const articlesJson = await Promise.all(
+      articles.map((article) => {
+        return article.toJson(this);
+      })
+    );
+    return {
+      articles: articlesJson,
+      articlesCount,
+    };
+  };
+
+  User.prototype.getArticleCountByFollowed = async function () {
+    return (
+      await User.findByPk(this.id, {
+        subQuery: false,
+        attributes: [
+          [
+            Sequelize.fn('COUNT', Sequelize.col('follows.authoredArticles.id')),
+            'count',
+          ],
+        ],
+        include: [
+          {
+            model: User,
+            as: 'follows',
+            attributes: [],
+            through: { attributes: [] },
+            include: [
+              {
+                model: sequelize.models.Article,
+                as: 'authoredArticles',
+                attributes: [],
+              },
+            ],
+          },
+        ],
+      })
+    ).dataValues.count;
+  };
+ next
 
   User.validPassword = function (user, password) {
     let hash = crypto
