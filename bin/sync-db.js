@@ -1,32 +1,40 @@
 #!/usr/bin/env node
+const { getSequelize, sync } = require('../models');
 
-// Sync the database. If the database exists, migrate.
-// Otherwise, just create directly from the latest DB settings to speed things up.
-//
-// Originally added for next build since we don't know how to run hooks.
-// before next build, and the database wouldn't exist otherwise.
+async function main() {
+  const sequelize = getSequelize();
+  await sync(sequelize, { force: true });
+  // console.log('Database synced successfully'); 
+  await sequelize.close();
+}
+
+testing
+main().catch((err) => {
+  // console.error(err);
+  process.exit(1);
+});
 
 ;(async () => {
-  const path = require('path')
-  const child_process = require('child_process')
-  const { DatabaseError } = require('sequelize')
-  const config = require('../front/config')
-  const models = require('../models')
+  const path = require('path');
+  const child_process = require('child_process');
+  const { DatabaseError } = require('sequelize');
+  const config = require('../front/config');
+  const models = require('../models');
 
-  const sequelize = models.getSequelize(path.dirname(__dirname))
-  let dbEmpty = true
+  const sequelize = models.getSequelize(path.dirname(__dirname));
+  let dbEmpty = true;
   try {
-    await sequelize.models.SequelizeMeta.findOne()
-    dbEmpty = false
+    await sequelize.models.SequelizeMeta.findOne();
+    dbEmpty = false;
   } catch (e) {
     if (e instanceof DatabaseError) {
-      await models.sync(sequelize)
+      await models.sync(sequelize);
     }
   }
   if (!dbEmpty) {
-    const env = process.env
+    const env = process.env;
     if (config.postgres) {
-      env.NODE_ENV = 'production'
+      env.NODE_ENV = 'production';
     }
     const out = child_process.spawnSync(
       'npx',
@@ -34,9 +42,10 @@
       {
         env,
       }
-    )
-    console.error(out.stdout.toString())
-    console.error(out.stderr.toString())
-    process.exit(out.status)
+    );
+    error(out.stdout.toString());
+    error(out.stderr.toString());
+    process.exit(out.status);
   }
-})()
+})();
+ next
