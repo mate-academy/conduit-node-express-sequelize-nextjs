@@ -1,4 +1,121 @@
 # Cypress: Settings
+pomoz mi napisac testy. w cypress mam katalog e2e a wnim :
+article.cy.js:/// <reference types="cypress" />
+/// <reference types="../support" />
+
+describe('Article', () => {
+  before(() => {
+
+  });
+
+  beforeEach(() => {
+    cy.task('db:clear');
+  });
+
+  it('should be created using New Article form', () => {
+
+  });
+
+  it('should be edited using Edit button', () => {
+
+  });
+
+  it('should be deleted using Delete button', () => {
+
+  });
+});
+settings.cy.js:/// <reference types="cypress" />
+/// <reference types="../support" />
+
+describe('Settings page', () => {
+  before(() => {
+
+  });
+
+  beforeEach(() => {
+
+  });
+
+  it('should provide an ability to update username', () => {
+
+  });
+
+  it('should provide an ability to update bio', () => {
+
+  });
+
+  it('should provide an ability to update an email', () => {
+
+  });
+
+  it('should provide an ability to update password', () => {
+
+  });
+
+  it('should provide an ability to log out', () => {
+
+  });
+});
+signIn.cy.js:/// <reference types='cypress' />
+/// <reference types='../support' />
+
+import SignInPageObject from '../support/pages/signIn.pageObject';
+import homePageObject from '../support/pages/home.pageObject';
+
+const signInPage = new SignInPageObject();
+const homePage = new homePageObject();
+
+describe('Sign In page', () => {
+  let user;
+
+  before(() => {
+    cy.task('db:clear');
+    cy.task('generateUser').then((generateUser) => {
+      user = generateUser;
+    });
+  });
+  
+  it('should provide an ability to log in with existing credentials', () => {
+    signInPage.visit();
+    cy.register(user.email, user.username, user.password);
+
+    signInPage.typeEmail(user.email);
+    signInPage.typePassword(user.password);
+    signInPage.clickSignInBtn();
+
+    homePage.assertHeaderContainUsername(user.username);
+  });
+
+  it('should not provide an ability to log in with wrong credentials', () => {
+
+  });
+});
+dignUp.cy.js:/// <reference types="cypress" />
+/// <reference types="../support" />
+
+describe('Sign Up page', () => {
+
+  before(() => {
+
+  });
+
+  it('should ...', () => {
+
+  });
+});
+user.cy.js:/// <reference types="cypress" />
+/// <reference types="../support" />
+
+describe('Follow/unfollow button', () => {
+  before(() => {
+
+  });
+
+  it.skip('should provide an ability to follow the another user', () => {
+
+  });
+});
+Ponadto jest tam wiele plikow typu pages. czy podac ci mojego linka do mojego repo abys mogl sie z nimi zapoznac ? o to moj link:https://github.com/webEsperer/qa_cypress_e2e_settings_pom_local
 
 ## Workflow
 
