@@ -10,8 +10,12 @@ describe('Settings page', () => {
   const userPassword = Cypress.env('USER_PASSWORD');
 
   beforeEach(() => {
-    cy.task('db:clear'); // czyszczenie bazy przed każdym testem
-    cy.login(userEmail, userPassword); // login pomocniczy, jeśli masz taki command
+    // Czyszczenie bazy danych przed każdym testem
+    cy.task('db:clear');
+    // Logowanie przed każdym testem
+    cy.login(userEmail, userPassword);
+    // Przejście na stronę ustawień
+    cy.visit('/settings');
   });
 
   it('should provide an ability to update username', () => {
@@ -28,7 +32,7 @@ describe('Settings page', () => {
     settingsPage.assertBio(newBio);
   });
 
-  it('should provide an ability to update email', () => {
+  it('should provide an ability to update an email', () => {
     const newEmail = faker.internet.email();
     settingsPage.typeEmail(newEmail);
     settingsPage.clickUpdateBtn();
@@ -36,10 +40,15 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update password', () => {
-    const newPassword = faker.internet.password({ length: 10 }); // długość ustawiona
+    const newPassword = faker.internet.password(10);
     settingsPage.typePassword(newPassword);
     settingsPage.clickUpdateBtn();
-    settingsPage.assertPasswordUpdated(newPassword);
+
+    // Sprawdzenie, czy użytkownik może zalogować się nowym hasłem
+    settingsPage.clickLogoutBtn();
+    cy.login(userEmail, newPassword);
+    cy.visit('/settings');
+    settingsPage.assertLoggedIn();
   });
 
   it('should provide an ability to log out', () => {
@@ -47,3 +56,4 @@ describe('Settings page', () => {
     settingsPage.assertLoggedOut();
   });
 });
+
