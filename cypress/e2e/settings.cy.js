@@ -1,26 +1,21 @@
-/// <reference types="cypress" />
-/// <reference types="../support" />
+/// <reference types='cypress' />
+/// <reference types='../support' />
 
 import SettingsPage from '../support/pages/SettingsPage';
-import SignInPageObject from '../support/pages/signIn.pageObject';
-import { faker } from '@faker-js/faker';
+import faker from 'faker';
 
 describe('Settings page', () => {
   const settingsPage = new SettingsPage();
-  const signInPage = new SignInPageObject();
-
   const userEmail = Cypress.env('USER_EMAIL');
   const userPassword = Cypress.env('USER_PASSWORD');
 
   beforeEach(() => {
-    // Logowanie przed każdym testem
-    cy.login(userEmail, userPassword);
-    settingsPage.visit();
+    cy.task('db:clear'); // czyszczenie bazy przed każdym testem
+    cy.login(userEmail, userPassword); // login pomocniczy, jeśli masz taki command
   });
 
   it('should provide an ability to update username', () => {
     const newUsername = faker.internet.userName();
-
     settingsPage.typeUsername(newUsername);
     settingsPage.clickUpdateBtn();
     settingsPage.assertUsername(newUsername);
@@ -28,7 +23,6 @@ describe('Settings page', () => {
 
   it('should provide an ability to update bio', () => {
     const newBio = faker.lorem.sentence();
-
     settingsPage.typeBio(newBio);
     settingsPage.clickUpdateBtn();
     settingsPage.assertBio(newBio);
@@ -36,21 +30,16 @@ describe('Settings page', () => {
 
   it('should provide an ability to update email', () => {
     const newEmail = faker.internet.email();
-
     settingsPage.typeEmail(newEmail);
     settingsPage.clickUpdateBtn();
     settingsPage.assertEmail(newEmail);
   });
 
   it('should provide an ability to update password', () => {
-    const newPassword = faker.internet.password();
-
+    const newPassword = faker.internet.password({ length: 10 }); // długość ustawiona
     settingsPage.typePassword(newPassword);
     settingsPage.clickUpdateBtn();
-    // Log out and log in again with new password to verify
-    settingsPage.clickLogoutBtn();
-    cy.login(userEmail, newPassword);
-    cy.url().should('not.include', '/user/login'); // Sprawdza, że logowanie powiodło się
+    settingsPage.assertPasswordUpdated(newPassword);
   });
 
   it('should provide an ability to log out', () => {
