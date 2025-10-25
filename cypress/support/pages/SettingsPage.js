@@ -1,34 +1,30 @@
 import PageObject from '../PageObject';
 
 class SettingsPage extends PageObject {
-  url = '/settings';
-
-  // Gettery do pól formularza
   get usernameField() {
-    return cy.getByDataCy('username');
+    return cy.get('[data-qa="settings-username"]');
   }
 
   get bioField() {
-    return cy.getByDataCy('bio');
+    return cy.get('[data-qa="settings-bio"]');
   }
 
   get emailField() {
-    return cy.getByDataCy('email');
+    return cy.get('[data-qa="settings-email"]');
   }
 
   get passwordField() {
-    return cy.getByDataCy('password');
+    return cy.get('[data-qa="settings-password"]');
   }
 
   get updateBtn() {
-    return cy.getByDataCy('update-btn');
+    return cy.get('[data-qa="settings-update-btn"]');
   }
 
   get logoutBtn() {
-    return cy.getByDataCy('logout');
+    return cy.get('[data-qa="settings-logout-btn"]');
   }
 
-  // Metody interakcji
   typeUsername(username) {
     this.usernameField.clear().type(username);
   }
@@ -51,3 +47,29 @@ class SettingsPage extends PageObject {
 
   clickLogoutBtn() {
     this.logoutBtn.click();
+  }
+
+  // Metody asercji
+  assertUsername(expectedUsername) {
+    this.usernameField.should('have.value', expectedUsername);
+  }
+
+  assertBio(expectedBio) {
+    this.bioField.should('have.value', expectedBio);
+  }
+
+  assertEmail(expectedEmail) {
+    this.emailField.should('have.value', expectedEmail);
+  }
+
+  assertPasswordUpdated(newPassword) {
+    cy.contains('Settings updated').should('be.visible');
+    // alternatywnie możesz sprawdzić, że stara sesja się kończy i trzeba się zalogować ponownie
+  }
+
+  assertLoggedOut() {
+    cy.url().should('include', '/login');
+  }
+}
+
+export default SettingsPage;
