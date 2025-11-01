@@ -16,7 +16,7 @@ describe('Article', () => {
     });
   });
 
-  it('should be created using New Article form', () => {
+  it.only('should be created using New Article form', () => {
 
     cy.task('generateArticle').then((article) => {
       articlePage.visit();

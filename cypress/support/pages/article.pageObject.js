@@ -4,11 +4,11 @@ class articlePageObject extends PageObject {
     url = '/editor';
 
     get articleTitleField() {
-        return cy.getByPlaceholder('Article Title');
+        return cy.getByDataCy('article-title');
     }
 
     typeArticleTitle(articleTitle) {
-        this.articleTitleField.type(articleTitle);
+        return this.articleTitleField.type(articleTitle);
     }
 
     get articleDescriptionField() {

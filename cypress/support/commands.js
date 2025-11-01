@@ -31,7 +31,7 @@ import HomePageObject from '../support/pages/home.pageObject';
 //
 
 Cypress.Commands.add('getByDataCy', (selector) => {
-  cy.get(`[data-cy^="${selector}"]`);
+  return cy.get(`[data-cy^="${selector}"]`);
 });
 
 Cypress.Commands.add('getByPlaceholder', (placeholder) => {
