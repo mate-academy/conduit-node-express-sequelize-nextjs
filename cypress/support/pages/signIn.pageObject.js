@@ -28,7 +28,7 @@ class SignInPageObject extends PageObject {
   }
 
   get unluckySignInMessage() {
-    return cy.get('li');
+    return cy.getByDataCy('error-message');
   }
 
   assertErrorMessage(message) {

@@ -7,7 +7,7 @@ class settingsPageObject extends PageObject {
     url = '/settings';
 
     get usernameField() {
-        return cy.getByPlaceholder('Username');
+        return cy.getByDataCy('username-field');
     }
 
     typeUsername(username) {
@@ -19,12 +19,12 @@ class settingsPageObject extends PageObject {
     }
 
     clickInUpdateSettings() {
-        return cy.contains('button', 'Update Settings')
+        return cy.getByDataCy('update-settings-btn')
             .click();
     }
 
     get bioField() {
-        return cy.getByPlaceholder('Short bio about you');
+        return cy.getByDataCy('bio-field');
     }
 
     clearBio() {
@@ -36,12 +36,11 @@ class settingsPageObject extends PageObject {
     }
 
     assertContainBio(bio) {
-        cy.contains('p', bio)
-            .should('exist');
+        this.bioField.should('have.value', bio);
     }
 
     get emailField() {
-        return cy.getByPlaceholder('Email');
+        return cy.getByDataCy('email-field');
     }
 
     typeEmail(email) {
@@ -53,16 +52,16 @@ class settingsPageObject extends PageObject {
     }
 
     assertContainEmail(email) {
-        cy.get('input[type="email"]').should('have.value', email);
+        this.emailField.should('have.value', email);
     }
 
     clickInLogout() {
-        cy.contains('button', 'Or click here to logout.')
+        cy.getByDataCy('log-out-btn')
             .click();
     }
 
     get passwordField() {
-        return cy.getByPlaceholder('New Password');
+        return cy.getByDataCy('new-password-field');
     }
 
     typeNewPassword(password) {

@@ -11,9 +11,9 @@ class HomePageObject extends PageObject {
     this.usernameLink
       .should('contain', username);
   }
-
+  
   clickInGlobalFeed() {
-    return cy.contains('.nav-link', 'Global Feed')
+    return cy.getByDataCy('global-feed')
       .click();
   }
 
@@ -23,21 +23,21 @@ class HomePageObject extends PageObject {
   }
 
   followUser() {
-    return cy.contains('button', 'Follow')
+    return cy.getByDataCy('follow-unfollow-user')
       .click();
   }
 
   assertFollowedUser() {
-    return cy.contains('button', 'Unfollow').should('exist');
+    return cy.getByDataCy('follow-unfollow-user').should('exist');
   }
 
   unfollowUser() {
-    return cy.contains('button', 'Unfollow')
+    return cy.getByDataCy('follow-unfollow-user')
       .click();
   }
 
   assertUnfollowedUser() {
-    return cy.contains('button', 'Follow').should('exist');
+    return cy.getByDataCy('follow-unfollow-user').should('exist');
   }
 
 }

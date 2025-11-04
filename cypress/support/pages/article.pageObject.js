@@ -4,15 +4,15 @@ class articlePageObject extends PageObject {
     url = '/editor';
 
     get articleTitleField() {
-        return cy.getByDataCy('article-title');
+        return cy.getByDataCy('article-title-field');
     }
 
     typeArticleTitle(articleTitle) {
-        return this.articleTitleField.type(articleTitle);
+        this.articleTitleField.type(articleTitle);
     }
 
     get articleDescriptionField() {
-        return cy.getByPlaceholder(`What's this article about?`);
+        return cy.getByDataCy('article-description-field');
     }
 
     typeArticleDescription(description) {
@@ -20,7 +20,7 @@ class articlePageObject extends PageObject {
     }
 
     get articleBodyField() {
-        return cy.getByPlaceholder(`Write your article (in markdown)`);
+        return cy.getByDataCy('article-body-field');
     }
 
     typeArticleBody(body) {
@@ -28,15 +28,15 @@ class articlePageObject extends PageObject {
     }
 
     get articleTagField() {
-        return cy.getByPlaceholder('Enter tags');
+        return cy.getByDataCy('tags-field');
     }
 
     typeArticleTag(tag) {
-        this.articleTagField.type(tag);
+        this.articleTagField.type(`${tag}{enter}`);
     }
 
     get publishButton() {
-        return cy.contains('button', 'Publish Article');
+        return cy.getByDataCy('publish-article-btn');
     }
 
     assertContainsPublishButton() {
@@ -56,11 +56,11 @@ class articlePageObject extends PageObject {
     }
 
     assertContainsArticleTitle(title) {
-        return cy.get('h1').should('contain', title);
+        return cy.getByDataCy('article-title').should('contain', title);
     }
 
     assertContainsBody(body) {
-        return cy.get('p').should('contain', body);
+        return cy.getByDataCy('article-body').should('contain', body);
     }
 
     clickInProfileLink() {
@@ -68,11 +68,12 @@ class articlePageObject extends PageObject {
     }
 
     assertContainsDescription(description) {
-        return cy.get('p').should('contain', description);
+        return cy.getByDataCy('article-description')
+        .should('contain', description);
     }
 
     assertContainsTag(tag) {
-        return cy.get('.tag-default').should('contain', tag);
+        return cy.getByDataCy('article-tag').should('contain', tag);
     }
 
     clickInNewArticle() {
@@ -80,22 +81,24 @@ class articlePageObject extends PageObject {
     }
 
     clickInEditButton() {
-        return cy.contains('a', 'Edit Article')
+        return cy.getByDataCy('edit-article')
+            .first()
             .click();
     }
 
     clickInUpdateArticle() {
-        return cy.contains('button', 'Update Article')
+        return cy.getByDataCy('publish-article-btn')
             .click();
     }
 
     clickInDeleteButton() {
-        return cy.contains('button', 'Delete Article')
+        return cy.getByDataCy('delete-article-btn')
+            .first()
             .click();
     }
 
     clickInArticle() {
-        return cy.get('.preview-link')
+        return cy.getByDataCy('article-link')
             .click();
     }
 

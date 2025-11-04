@@ -91,7 +91,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <div dangerouslySetInnerHTML={markup} />
+              <div data-cy="article-body" dangerouslySetInnerHTML={markup} />
               <ul className="tag-list">
                 {article.tagList?.map((tag) => (
                   <li className="tag-default tag-pill tag-outline" key={tag}>

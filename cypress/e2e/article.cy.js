@@ -6,6 +6,7 @@ import {
 } from '@faker-js/faker';
 import articlePageObject from '../support/pages/article.pageObject';
 
+
 const articlePage = new articlePageObject();
 
 describe('Article', () => {
@@ -16,7 +17,7 @@ describe('Article', () => {
     });
   });
 
-  it.only('should be created using New Article form', () => {
+  it('should be created using New Article form', () => {
 
     cy.task('generateArticle').then((article) => {
       articlePage.visit();
@@ -25,7 +26,6 @@ describe('Article', () => {
       articlePage.typeArticleBody(article.body);
       articlePage.typeArticleTag(article.tag);
       articlePage.assertContainsPublishButton();
-      articlePage.clickInPublishButton();
       articlePage.clickInPublishButton();
       articlePage.assertContainsArticleTitle(article.title);
       articlePage.assertContainsBody(article.body);

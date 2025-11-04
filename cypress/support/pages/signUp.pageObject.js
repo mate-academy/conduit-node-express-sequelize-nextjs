@@ -4,7 +4,7 @@ class SignUpPageObject extends PageObject {
     url = 'user/register';
 
     get usernameField() {
-        return cy.get('[placeholder="Username"]');
+        return cy.getByDataCy('username-sign-in');
     }
 
     typeUsername(username) {

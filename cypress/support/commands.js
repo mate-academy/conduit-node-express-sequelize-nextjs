@@ -81,7 +81,6 @@ Cypress.Commands.add('createArticle', () => {
     articlePage.typeArticleBody(article.body);
     articlePage.typeArticleTag(article.tag);
     articlePage.assertContainsPublishButton();
-    articlePage.clickInPublishButton();
     articlePage.clickInPublishButton().then((response) => {
       articlePage.assertContainsArticleTitle(article.title);
       articlePage.assertContainsBody(article.body);
