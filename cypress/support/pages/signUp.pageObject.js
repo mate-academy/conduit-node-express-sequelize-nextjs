@@ -1,7 +1,11 @@
 import PageObject from '../PageObject';
 
-class SignInPageObject extends PageObject {
-  url = '/user/login';
+class SignUpPageObject extends PageObject {
+  url = '/user/register';
+
+  get userNameField() {
+    return cy.getByDataCy('username-sign-up');
+  }
 
   get emailField() {
     return cy.getByDataCy('email-sign-in');
@@ -11,12 +15,16 @@ class SignInPageObject extends PageObject {
     return cy.getByDataCy('password-sign-in');
   }
 
-  get signInBtn() {
+  get signUpBtn() {
     return cy.getByDataCy('sign-in-btn');
   }
 
   get errorMessages() {
     return cy.get('.error-messages > :nth-child(1)');
+  }
+
+  typeUserName(username) {
+    this.userNameField.type(username);
   }
 
   typeEmail(email) {
@@ -27,9 +35,9 @@ class SignInPageObject extends PageObject {
     this.passwordField.type(password);
   }
 
-  clickSignInBtn() {
-    this.signInBtn.click();
+  clickSignUpBtn() {
+    this.signUpBtn.click();
   }
 }
 
-export default SignInPageObject;
+export default SignUpPageObject;

@@ -1,24 +1,94 @@
 /// <reference types="cypress" />
 /// <reference types="../support" />
-
+import homePageObject from '../support/pages/home.pageObject';
+import ArticlePageObject from '../support/pages/article.pageObject.js';
+import SettingsPageObject from '../support/pages/settings.pageObject.js';
+import { generateArticle } from '../support/generateArticle.js';
+const articlePage = new ArticlePageObject();
+const settingsPage = new SettingsPageObject();
+const homePage = new homePageObject();
 describe('Article', () => {
-  before(() => {
 
-  });
 
   beforeEach(() => {
     cy.task('db:clear');
+    cy.login();
+    // settingsPage.visit()
+    homePage.visit();
   });
 
   it('should be created using New Article form', () => {
+    const { title, description, body } = generateArticle();
+    articlePage.clickNewArticleBtn();
+    cy.assertPageUrl('/editor');
+    articlePage.typeTitle(title);
+    articlePage.typeBio(description);
+    articlePage.typeBody(body);
+articlePage.titleField.should('have.value', title);
+    articlePage.bioField.should('have.value', description);
+    articlePage.bodyField.should('have.value', body);
+    articlePage.publishBtn.should('have.text', 'Publish Article');
+    articlePage.clickPublishBtn();
+    
 
   });
 
   it('should be edited using Edit button', () => {
-
+    let { title, description, body } = generateArticle();
+  
+articlePage.clickNewArticleBtn();
+cy.assertPageUrl('/editor');
+articlePage.typeTitle(title);
+articlePage.typeBio(description);
+articlePage.typeBody(body);
+    articlePage.clickPublishBtn();
+    articlePage.clickeditArticleBtn();
+    let article2 = generateArticle();
+   articlePage.titleField.clear();
+    articlePage.typeTitle(article2.title);
+    articlePage.bioField.clear();
+    articlePage.typeBio(article2.description);
+    articlePage.bodyField.clear();
+    articlePage.typeBody(article2.body);
+    articlePage.titleField.should('have.value', article2.title);
+    articlePage.bioField.should('have.value', article2.description);
+    articlePage.bodyField.should('have.value', article2.body);
+     articlePage.publishBtn.should('have.text', 'Update Article');
+     articlePage.clickPublishBtn();
+    
   });
 
   it('should be deleted using Delete button', () => {
+     const { title, description, body } = generateArticle();
+     articlePage.clickNewArticleBtn();
+     cy.assertPageUrl('/editor');
+     articlePage.typeTitle(title);
+     articlePage.typeBio(description);
+     articlePage.typeBody(body);
+     articlePage.titleField.should('have.value', title);
+     articlePage.bioField.should('have.value', description);
+     articlePage.bodyField.should('have.value', body);
+     articlePage.publishBtn.should('have.text', 'Publish Article');
+    articlePage.clickPublishBtn();
 
+   
+
+    articlePage.articleTitle.should(
+      'have.text', title);
+    articlePage.articleBody.should('have.text', body);
+    cy.get('[data-cy="profile-link"]').click();
+
+    cy.assertPageUrl('/profile/riot');
+cy.get('.preview-link > p').should(
+  'have.text', description);
+    
+    articlePage.articleTitle.click();
+    
+    articlePage.clickDeleteArticleBtn();
+    cy.get('.article-preview').should(
+      'have.text',
+      'No articles are here... yet.'
+    );
+  
   });
 });

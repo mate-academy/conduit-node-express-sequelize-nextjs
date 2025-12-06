@@ -9,12 +9,16 @@ const homePage = new homePageObject();
 
 describe('Sign In page', () => {
   let user;
-
-  before(() => {
+let user2;
+  beforeEach(() => {
     cy.task('db:clear');
     cy.task('generateUser').then((generateUser) => {
       user = generateUser;
     });
+ cy.task('generateUser').then((generateUser) => {
+   user2 = generateUser;
+ });
+
   });
   
   it('should provide an ability to log in with existing credentials', () => {
@@ -28,7 +32,24 @@ describe('Sign In page', () => {
     homePage.assertHeaderContainUsername(user.username);
   });
 
-  it('should not provide an ability to log in with wrong credentials', () => {
+  it('should not provide an ability to log in with wrong email', () => {
+  signInPage.visit();
+  cy.register(user.email, user.username, user.password);
 
+  signInPage.typeEmail(user2.email);
+  signInPage.typePassword(user.password);
+  signInPage.clickSignInBtn();
+signInPage.errorMessages.should('have.text', 'email or password:is invalid');
   });
+
+it('should not provide an ability to log in with wrong password', () => {
+  signInPage.visit();
+  cy.register(user.email, user.username, user.password);
+
+  signInPage.typeEmail(user.email);
+  signInPage.typePassword(user.password + '1');
+  signInPage.clickSignInBtn();
+  signInPage.errorMessages.should('have.text', 'email or password:is invalid');
+});
+
 });
