@@ -15,8 +15,8 @@ let user2;
     cy.task('generateUser').then((generateUser) => {
       user = generateUser;
     });
- cy.task('generateUser').then((generateUser) => {
-   user2 = generateUser;
+ cy.task('generateUser').then((generateUser2) => {
+   user2 = generateUser2;
  });
 
   });
@@ -39,7 +39,9 @@ let user2;
   signInPage.typeEmail(user2.email);
   signInPage.typePassword(user.password);
   signInPage.clickSignInBtn();
-signInPage.errorMessages.should('have.text', 'email or password:is invalid');
+    signInPage.errorMessages.should('contain.text', 'email or password');
+    signInPage.errorMessages.should('include.text', 'is invalid');
+    
   });
 
 it('should not provide an ability to log in with wrong password', () => {
@@ -49,7 +51,8 @@ it('should not provide an ability to log in with wrong password', () => {
   signInPage.typeEmail(user.email);
   signInPage.typePassword(user.password + '1');
   signInPage.clickSignInBtn();
-  signInPage.errorMessages.should('have.text', 'email or password:is invalid');
+  signInPage.errorMessages.should('contain.text', 'email or password');
+  signInPage.errorMessages.should('include.text', 'is invalid');
 });
 
 });

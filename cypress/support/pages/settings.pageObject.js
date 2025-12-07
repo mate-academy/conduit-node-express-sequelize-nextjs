@@ -4,27 +4,27 @@ class SettingsPageObject extends PageObject {
   url = '/settings';
 
   get userNameField() {
-    return cy.get('[data-cy="username"]');
+    return cy.getByDataCy('username');
   }
 
   get bioField() {
-    return cy.getByDataCy('bio');
+    return cy.get('[data-cy="bio"]');
   }
 
   get emailField() {
-    return cy.get('[data-cy="email"]');
+    return cy.getByDataCy('email');
   }
 
   get passwordField() {
-    return cy.get('[data-cy="password"]');
+    return cy.getByDataCy('password');
   }
 
   get submitButton() {
-    return cy.contains('[data-cy="submitButton"]', 'Update Settings');
+    return cy.getByDataCy('submitButton').contains('Update Settings');
   }
 
   get logoutButton() {
-    return cy.get('.btn-outline-danger');
+    return cy.getByDataCy('logoutBtn');
   }
 
  
@@ -46,7 +46,7 @@ class SettingsPageObject extends PageObject {
   }
 
   updateSettings() {
-    this.submitButton.click();
+    return this.submitButton.click();
   }
 
   logoutSettings() {

@@ -8,12 +8,16 @@ const articlePage = new ArticlePageObject();
 const settingsPage = new SettingsPageObject();
 const homePage = new homePageObject();
 describe('Article', () => {
-
+let user1;
 
   beforeEach(() => {
     cy.task('db:clear');
-    cy.login();
-    // settingsPage.visit()
+    cy.task('generateUser').then((newuser) => {
+      user1 = newuser;
+
+      cy.login(user1.email, user1.username, user1.password);
+      // settingsPage.visit()
+    });
     homePage.visit();
   });
 
@@ -29,6 +33,13 @@ articlePage.titleField.should('have.value', title);
     articlePage.bodyField.should('have.value', body);
     articlePage.publishBtn.should('have.text', 'Publish Article');
     articlePage.clickPublishBtn();
+
+    articlePage.articleTitle.should('have.text', title);
+    articlePage.articleBody.should('have.text', body);
+    cy.get('[data-cy="profile-link"]').click();
+
+    cy.assertPageUrl('/profile/' + user1.username);
+    cy.get('.preview-link > p').should('have.text', description);
     
 
   });
@@ -42,6 +53,16 @@ articlePage.typeTitle(title);
 articlePage.typeBio(description);
 articlePage.typeBody(body);
     articlePage.clickPublishBtn();
+
+ articlePage.articleTitle.should('have.text', title);
+ articlePage.articleBody.should('have.text', body);
+ cy.get('[data-cy="profile-link"]').click();
+
+ cy.assertPageUrl('/profile/' + user1.username);
+    cy.get('.preview-link > p').should('have.text', description);
+    
+    articlePage.articleTitle.click();
+
     articlePage.clickeditArticleBtn();
     let article2 = generateArticle();
    articlePage.titleField.clear();
@@ -54,7 +75,15 @@ articlePage.typeBody(body);
     articlePage.bioField.should('have.value', article2.description);
     articlePage.bodyField.should('have.value', article2.body);
      articlePage.publishBtn.should('have.text', 'Update Article');
-     articlePage.clickPublishBtn();
+    articlePage.clickPublishBtn();
+
+    articlePage.articleTitle.should('have.text', article2.title);
+    articlePage.articleBody.should('have.text', article2.body);
+    cy.get('[data-cy="profile-link"]').click();
+
+    cy.assertPageUrl('/profile/' + user1.username);
+    cy.get('.preview-link > p').should('have.text', article2.description);
+    
     
   });
 
@@ -78,7 +107,7 @@ articlePage.typeBody(body);
     articlePage.articleBody.should('have.text', body);
     cy.get('[data-cy="profile-link"]').click();
 
-    cy.assertPageUrl('/profile/riot');
+    cy.assertPageUrl('/profile/' + user1.username);
 cy.get('.preview-link > p').should(
   'have.text', description);
     

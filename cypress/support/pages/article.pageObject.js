@@ -24,7 +24,7 @@ class ArticlePageObject extends PageObject {
   }
 
   get newArticleButton() {
-    return cy.get('[data-cy="new-article-link"]');
+    return cy.getByDataCy('new-article-link');
   }
 
   get editArticleBtn() {

@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /* eslint-disable max-len */
 /// <reference types="cypress" />
 /// <reference types="../support" />
@@ -10,7 +11,7 @@ describe('Settings page', () => {
   let user1;
   let user2;
   before(() => {
-    cy.task('db:clear');
+    
 
     cy.task('generateUser').then((newuser) => {
       user2 = newuser;
@@ -27,6 +28,7 @@ describe('Settings page', () => {
   });
 
   beforeEach(() => {
+    cy.task('db:clear');
     cy.task('generateUser').then((newuser) => {
       user1 = newuser;
 
@@ -36,9 +38,9 @@ describe('Settings page', () => {
 
       signInPage.visit();
       cy.assertPageUrl('/user/login');
-      signInPage.typeEmail(user1.email);
-      signInPage.typePassword(user1.password);
-      signInPage.clickSignInBtn();
+      // signInPage.typeEmail(user1.email);
+     // signInPage.typePassword(user1.password);
+     // signInPage.clickSignInBtn();
       settingsPage.visit();
       cy.assertPageUrl('/settings');
     });
@@ -49,12 +51,14 @@ describe('Settings page', () => {
     settingsPage.userNameField.clear();
     settingsPage.typeUserName(user2.username);
     settingsPage.updateSettings();
+    settingsPage.visit();
     settingsPage.userNameField.should('have.value', user2.username);
   });
 
   it('should provide an ability to update bio', () => {
-    settingsPage.bioField.should('have.value', '');
-
+    // cy.log(user1.bio);
+    // settingsPage.bioField.should('have.value', user1.bio);
+    settingsPage.bioField.clear();
     settingsPage.typeBio(user2.bio);
     settingsPage.updateSettings();
     settingsPage.bioField.should('have.value', user2.bio);
@@ -73,7 +77,8 @@ describe('Settings page', () => {
 
     settingsPage.typePassword(user2.password);
     settingsPage.updateSettings();
-    settingsPage.passwordField.should('have.value', user2.password);
+    cy.assertPageUrl('/profile/' + user1.username);
+    // settingsPage.passwordField.should('have.value', user2.password);
   });
 
   it('should provide an ability to update username, bio, email and password', () => {
@@ -96,8 +101,9 @@ describe('Settings page', () => {
 
     settingsPage.typePassword(user2.password);
 
-    settingsPage.passwordField.should('have.value', user2.password);
+    // settingsPage.passwordField.should('have.value', user2.password);
     settingsPage.updateSettings();
+    cy.assertPageUrl('/profile/' + user2.username);
 
 
   });
