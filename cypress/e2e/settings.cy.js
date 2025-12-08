@@ -10,39 +10,27 @@ const signInPage = new SignInPageObject();
 describe('Settings page', () => {
   let user1;
   let user2;
-  before(() => {
-    
-
-    cy.task('generateUser').then((newuser) => {
-      user2 = newuser;
-      cy.log(user2.email, user2.username, user2.password, user2.bio);
-
-      // signInPage.visit();
-      // cy.login(email, username, password);
-
-      // signInPage.typeEmail(user2.email);
-      // signInPage.typePassword(user2.password);
-      // signInPage.clickSignInBtn();
-      // settingsPage.visit();
-    });
-  });
+ 
 
   beforeEach(() => {
     cy.task('db:clear');
     cy.task('generateUser').then((newuser) => {
       user1 = newuser;
 
-      // signInPage.visit();
+      
       cy.login(user1.email, user1.username, user1.password);
-      cy.log(user1.email, user1.username, user1.password, user1.bio);
 
       signInPage.visit();
       cy.assertPageUrl('/user/login');
-      // signInPage.typeEmail(user1.email);
-     // signInPage.typePassword(user1.password);
-     // signInPage.clickSignInBtn();
+     
       settingsPage.visit();
       cy.assertPageUrl('/settings');
+    });
+    // user2 is only used as a local set of new values !!!
+    cy.task('generateUser').then((newuser) => {
+      user2 = newuser;
+
+  
     });
   });
 
@@ -50,6 +38,7 @@ describe('Settings page', () => {
     settingsPage.userNameField.should('have.value', user1.username);
     settingsPage.userNameField.clear();
     settingsPage.typeUserName(user2.username);
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.updateSettings();
     settingsPage.visit();
     settingsPage.userNameField.should('have.value', user2.username);
@@ -60,6 +49,7 @@ describe('Settings page', () => {
     // settingsPage.bioField.should('have.value', user1.bio);
     settingsPage.bioField.clear();
     settingsPage.typeBio(user2.bio);
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.updateSettings();
     settingsPage.bioField.should('have.value', user2.bio);
   });
@@ -68,6 +58,7 @@ describe('Settings page', () => {
     settingsPage.emailField.should('have.value', user1.email);
     settingsPage.emailField.clear();
     settingsPage.typeEmail(user2.email);
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.updateSettings();
     settingsPage.emailField.should('have.value', user2.email);
   });
@@ -76,6 +67,7 @@ describe('Settings page', () => {
     settingsPage.passwordField.should('have.value', '');
 
     settingsPage.typePassword(user2.password);
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.updateSettings();
     cy.assertPageUrl('/profile/' + user1.username);
     // settingsPage.passwordField.should('have.value', user2.password);
@@ -102,6 +94,7 @@ describe('Settings page', () => {
     settingsPage.typePassword(user2.password);
 
     // settingsPage.passwordField.should('have.value', user2.password);
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.updateSettings();
     cy.assertPageUrl('/profile/' + user2.username);
 
@@ -109,6 +102,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to log out', () => {
+    settingsPage.submitButton.contains('Update Settings');
     settingsPage.logoutSettings();
     cy.assertPageUrl('/');
   });

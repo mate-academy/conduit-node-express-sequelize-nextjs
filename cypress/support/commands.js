@@ -38,6 +38,8 @@ Cypress.Commands.add('register', (email = 'riot@qa.team', username = 'riot', pas
       username,
       password
     }
+  }).then((response) => {
+    expect(response.status).to.eq(200);
   });
 });
 
@@ -57,7 +59,9 @@ Cypress.Commands.add('login', (email = 'riot@qa.team', username = 'riot', passwo
       token: response.body.user.token,
       username: response.body.user.username,
     };
-    window.localStorage.setItem('user', JSON.stringify(user));
+    cy.window().then((win) => {
+      win.localStorage.setItem('user', JSON.stringify(user));
+    });
     cy.setCookie('auth', response.body.user.token);
   });
 });

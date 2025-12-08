@@ -24,15 +24,15 @@ class SignUpPageObject extends PageObject {
   }
 
   typeUserName(username) {
-    this.userNameField.type(username);
+    this.userNameField.type(username); return this;
   }
 
   typeEmail(email) {
-    this.emailField.type(email);
+    this.emailField.type(email); return this;
   }
 
   typePassword(password) {
-    this.passwordField.type(password);
+    this.passwordField.type(password); return this;
   }
 
   clickSignUpBtn() {

@@ -51,19 +51,19 @@ class ArticlePageObject extends PageObject {
   }*/
 
   typeTitle(title) {
-    this.titleField.type(title);
+    this.titleField.type(title); return this;
   }
 
   typeBio(bio) {
-    this.bioField.type(bio);
+    this.bioField.type(bio); return this;
   }
 
   typeBody(body) {
-    this.bodyField.type(body);
+    this.bodyField.type(body); return this;
   }
 
   typeTags(tags) {
-    this.tagsField.type(tags);
+    this.tagsField.type(tags); return this;
   }
 
   clickPublishBtn() {

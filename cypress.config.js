@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress';
 import { faker } from '@faker-js/faker';
 import { clear } from './dataBase';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
@@ -16,7 +16,7 @@ module.exports = defineConfig({
             username: userName.toLowerCase(),
             email: 'test'+`${randomNumber}`+'@mail.com',
             password: '12345Qwert!',
-            bio: userBio?userBio:'myBio',
+            bio: userBio || 'myBio',
           };
         },
         generateArticle() {

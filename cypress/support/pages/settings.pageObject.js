@@ -8,7 +8,7 @@ class SettingsPageObject extends PageObject {
   }
 
   get bioField() {
-    return cy.get('[data-cy="bio"]');
+    return cy.getByDataCy('bio');
   }
 
   get emailField() {
@@ -20,7 +20,7 @@ class SettingsPageObject extends PageObject {
   }
 
   get submitButton() {
-    return cy.getByDataCy('submitButton').contains('Update Settings');
+    return cy.getByDataCy('submitButton');
   }
 
   get logoutButton() {
@@ -30,19 +30,19 @@ class SettingsPageObject extends PageObject {
  
 
   typeUserName(username) {
-    this.userNameField.type(username);
+    this.userNameField.type(username); return this;
   }
 
   typeBio(bio) {
-    this.bioField.type(bio);
+    this.bioField.type(bio); return this;
   }
 
   typeEmail(email) {
-    this.emailField.type(email);
+    this.emailField.type(email); return this;
   }
 
   typePassword(password) {
-    this.passwordField.type(password);
+    this.passwordField.type(password); return this;
   }
 
   updateSettings() {

@@ -1,11 +1,12 @@
+/* eslint-disable max-len */
 /// <reference types="cypress" />
 /// <reference types="../support" />
 import homePageObject from '../support/pages/home.pageObject';
 import ArticlePageObject from '../support/pages/article.pageObject.js';
-import SettingsPageObject from '../support/pages/settings.pageObject.js';
+
 import { generateArticle } from '../support/generateArticle.js';
 const articlePage = new ArticlePageObject();
-const settingsPage = new SettingsPageObject();
+
 const homePage = new homePageObject();
 describe('Article', () => {
 let user1;
@@ -14,11 +15,13 @@ let user1;
     cy.task('db:clear');
     cy.task('generateUser').then((newuser) => {
       user1 = newuser;
-
-      cy.login(user1.email, user1.username, user1.password);
+      
+      cy.login(user1.email, user1.username, user1.password).then(() => {
+        homePage.visit();
+      });
       // settingsPage.visit()
     });
-    homePage.visit();
+    
   });
 
   it('should be created using New Article form', () => {
@@ -36,11 +39,11 @@ articlePage.titleField.should('have.value', title);
 
     articlePage.articleTitle.should('have.text', title);
     articlePage.articleBody.should('have.text', body);
-    cy.get('[data-cy="profile-link"]').click();
+    cy.getByDataCy('profile-link').click();
 
     cy.assertPageUrl('/profile/' + user1.username);
-    cy.get('.preview-link > p').should('have.text', description);
-    
+    // cy.get('.preview-link > p').should('have.text', description);
+    cy.getByDataCy('preview-description').should('have.text', description);
 
   });
 
@@ -56,11 +59,11 @@ articlePage.typeBody(body);
 
  articlePage.articleTitle.should('have.text', title);
  articlePage.articleBody.should('have.text', body);
- cy.get('[data-cy="profile-link"]').click();
+ cy.getByDataCy('profile-link').click();
 
  cy.assertPageUrl('/profile/' + user1.username);
-    cy.get('.preview-link > p').should('have.text', description);
-    
+    // cy.get('.preview-link > p').should('have.text', description);
+    cy.getByDataCy('preview-description').should('have.text', description);
     articlePage.articleTitle.click();
 
     articlePage.clickeditArticleBtn();
@@ -79,11 +82,11 @@ articlePage.typeBody(body);
 
     articlePage.articleTitle.should('have.text', article2.title);
     articlePage.articleBody.should('have.text', article2.body);
-    cy.get('[data-cy="profile-link"]').click();
+    cy.getByDataCy('profile-link').click();
 
     cy.assertPageUrl('/profile/' + user1.username);
-    cy.get('.preview-link > p').should('have.text', article2.description);
-    
+    // cy.get('.preview-link > p').should('have.text', article2.description);
+    cy.getByDataCy('preview-description').should('have.text', article2.description);
     
   });
 
@@ -105,16 +108,18 @@ articlePage.typeBody(body);
     articlePage.articleTitle.should(
       'have.text', title);
     articlePage.articleBody.should('have.text', body);
-    cy.get('[data-cy="profile-link"]').click();
+    cy.getByDataCy('profile-link').click();
 
     cy.assertPageUrl('/profile/' + user1.username);
-cy.get('.preview-link > p').should(
-  'have.text', description);
-    
+   // cy.get('.preview-link > p').should(
+   // 'have.text', description);
+    cy.getByDataCy('preview-description').should('have.text', description);
     articlePage.articleTitle.click();
     
+
+
     articlePage.clickDeleteArticleBtn();
-    cy.get('.article-preview').should(
+    cy.getByDataCy('no-articles').should(
       'have.text',
       'No articles are here... yet.'
     );

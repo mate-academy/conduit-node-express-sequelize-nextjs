@@ -20,11 +20,11 @@ class SignInPageObject extends PageObject {
   }
 
   typeEmail(email) {
-    this.emailField.type(email);
+    this.emailField.type(email); return this;
   }
 
   typePassword(password) {
-    this.passwordField.type(password);
+    this.passwordField.type(password); return this;
   }
 
   clickSignInBtn() {
