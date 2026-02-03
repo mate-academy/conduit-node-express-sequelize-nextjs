@@ -36,7 +36,7 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update bio', () => {
-    const newBio = 'Updated bio from e2e test';
+    const newBio = faker.lorem.sentence();
 
     settingsPage.updateBio(newBio);
 
