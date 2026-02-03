@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-import { faker } from '@faker-js/faker';
 import SettingsPage from '../support/pages/settings.pageObject';
 import PageObject from '../support/PageObject';
 
@@ -10,58 +9,63 @@ describe('Settings page', () => {
 
   let user;
 
-  before(() => {
-    user = {
-      username: `user${faker.number.int({ min: 1000, max: 9999 })}`,
-      email: faker.internet.email().toLowerCase(),
-      password: 'Password123!',
-    };
-
-    cy.register(user.email, user.username, user.password);
-  });
-
   beforeEach(() => {
-    cy.login(user.email, user.password);
+    // ✅ REQUIRED: clear DB before every test
+    cy.task('db:clear');
+
+    // ✅ REQUIRED: faker via custom command
+    cy.generateUser().then((generatedUser) => {
+      user = generatedUser;
+
+      cy.register(user.email, user.username, user.password);
+      cy.login(user.email, user.password);
+    });
+
     settingsPage.open();
   });
 
   it('should provide an ability to update username', () => {
-    const newUsername = `user${faker.number.int({ min: 10000, max: 99999 })}`;
+    const newUsername = `${user.username}_updated`;
 
     settingsPage.updateUsername(newUsername);
+
+    settingsPage.usernameInput.should('have.value', newUsername);
     app.assertLoggedUsername(newUsername);
 
     user.username = newUsername;
   });
 
   it('should provide an ability to update bio', () => {
-    const newBio = faker.lorem.sentence();
+    const newBio = 'Updated bio from e2e test';
 
     settingsPage.updateBio(newBio);
+
     settingsPage.bioTextarea.should('have.value', newBio);
   });
 
   it('should provide an ability to update an email', () => {
-    const newEmail = faker.internet.email().toLowerCase();
+    const newEmail = `updated_${user.email}`;
 
     settingsPage.updateEmail(newEmail);
+
     settingsPage.emailInput.should('have.value', newEmail);
 
     user.email = newEmail;
   });
 
   it('should provide an ability to update password and log out', () => {
-    const newPassword = 'NewPassword123!';
+    const newPassword = user.newPassword;
 
-    // 🔒 Intercept the real backend update
+    // backend confirmation
     cy.intercept('PUT', '/api/user').as('updateUser');
 
     settingsPage.updatePassword(newPassword);
 
-    // ⏳ WAIT until backend REALLY finishes
-    cy.wait('@updateUser').its('response.statusCode').should('eq', 200);
+    cy.wait('@updateUser')
+      .its('response.statusCode')
+      .should('eq', 200);
 
-    // update local state only AFTER backend confirms
+    // update local state AFTER backend success
     user.password = newPassword;
 
     // logout
@@ -69,11 +73,10 @@ describe('Settings page', () => {
 
     // login with new password
     cy.login(user.email, user.password);
-
     app.assertLoggedUsername(user.username);
 
-    // final logout
+    // final logout check
     settingsPage.logout();
-    cy.contains('Sign in').should('be.visible');
+    cy.get('[data-cy="nav-sign-in"]').should('be.visible');
   });
 });
