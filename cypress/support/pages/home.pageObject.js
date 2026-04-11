@@ -3,12 +3,10 @@ import PageObject from '../PageObject';
 class HomePageObject extends PageObject {
   url = '/#/';
 
-  get usernameLink() {
-    return cy.getByDataCy('profile-link');
-  }
-
+  // Ми використовуємо метод з базового класу PageObject (profileLink)
   assertHeaderContainUsername(username) {
-    this.usernameLink
+    this.profileLink
+      .should('be.visible')
       .should('contain', username);
   }
 }

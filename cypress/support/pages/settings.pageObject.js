@@ -2,28 +2,31 @@ import PageObject from '../PageObject';
 
 class SettingsPageObject extends PageObject {
   url = '/settings';
+
   get usernameField() {
-    return cy.get('input[placeholder="Username"]');
+    return cy.getByDataCy('username');
   }
 
   get bioField() {
-    return cy.get('textarea[placeholder="Short bio about you"]');
+    return cy.getByDataCy('bio');
   }
 
   get emailField() {
-    return cy.get('input[placeholder="Email"]');
-  };
+    return cy.getByDataCy('email');
+  }
 
   get passwordField() {
-    return cy.get('input[placeholder="New Password"]');
+    return cy.getByDataCy('password');
   }
 
   get submitBtn() {
-    return cy.get('button[type="submit"]');
-  };
+    return cy.getByDataCy('submit');
+  }
 
   get logoutBtn() {
-    return cy.get('.btn-outline-danger');
+    // Ми ще не додали data-cy для кнопки Logout у Navbar, 
+    // але для самої сторінки Settings зробимо це так:
+    return cy.getByDataCy('logout');
   }
 
   updateField(fieldGetter, value) {
@@ -32,11 +35,11 @@ class SettingsPageObject extends PageObject {
   }
 
   clickSubmit() {
-    this.submitBtn.click();
+    this.submitBtn.should('be.visible').click();
   }
 
   clickLogout() {
-    this.logoutBtn.click();
+    this.logoutBtn.should('be.visible').click();
   }
 }
 
