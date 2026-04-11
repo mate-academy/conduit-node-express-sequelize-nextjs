@@ -24,8 +24,6 @@ class SettingsPageObject extends PageObject {
   }
 
   get logoutBtn() {
-    // Ми ще не додали data-cy для кнопки Logout у Navbar, 
-    // але для самої сторінки Settings зробимо це так:
     return cy.getByDataCy('logout');
   }
 

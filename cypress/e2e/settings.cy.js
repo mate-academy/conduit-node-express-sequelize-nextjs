@@ -15,14 +15,16 @@ describe('Settings page', () => {
       user = generatedUser;
       cy.register(user.email, user.username, user.password);
       cy.login(user.email, user.username, user.password);
+      cy.visit('/', { timeout: 30000 }); 
 
-      homePage.visit();
-      homePage.clickSettings();
+      cy.get('.nav-link', { timeout: 15000 }).should('contain', user.username);
+      
+      settingsPage.visit();
     });
   });
 
   it('should provide an ability to update username', () => {
-    const newUsername = faker.internet.userName();
+    const newUsername = faker.person.firstName() + faker.number.int(1000);
     settingsPage.updateField('usernameField', newUsername);
     settingsPage.clickSubmit();
     homePage.assertHeaderContainUsername(newUsername);

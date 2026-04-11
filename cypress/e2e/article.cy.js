@@ -46,10 +46,13 @@ describe('Article', () => {
         const initialSlug = res.body.article.slug;
         cy.visit(`/article/${initialSlug}`);
 
-        cy.contains('a', 'Edit Article').click()
+        cy.contains('a', 'Edit Article').click();
+
         cy.get('input[placeholder="Article Title"]', { timeout: 10000 })
           .should('be.visible')
-          .clear()
+         .clear();
+
+        cy.get('input[placeholder="Article Title"]')
           .type('Update Title');
         cy.contains('button', 'Update Article').should('be.visible').click();
         cy.url().should('include', '/article/');
