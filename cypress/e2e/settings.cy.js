@@ -10,6 +10,7 @@ describe('Settings page', () => {
   let user;
 
   beforeEach(() => {
+    cy.intercept('PUT', '**/api/user').as('updateUser');
     cy.task('db:clear');
     cy.task('generateUser').then((generatedUser) => {
       user = generatedUser;
@@ -27,6 +28,7 @@ describe('Settings page', () => {
     const newUsername = faker.person.firstName() + faker.number.int(1000);
     settingsPage.updateField('usernameField', newUsername);
     settingsPage.clickSubmit();
+    cy.wait('@updateUser').its('response.statusCode').should('eq', 200);
     homePage.assertHeaderContainUsername(newUsername);
   });
 
@@ -34,6 +36,7 @@ describe('Settings page', () => {
     const newBio = faker.lorem.sentence();
     settingsPage.updateField('bioField', newBio);
     settingsPage.clickSubmit();
+    cy.wait('@updateUser');
     settingsPage.visit();
     settingsPage.bioField.should('have.value', newBio);
   });
@@ -42,6 +45,7 @@ describe('Settings page', () => {
     const newEmail = faker.internet.email().toLowerCase();
     settingsPage.updateField('emailField', newEmail);
     settingsPage.clickSubmit();
+    cy.wait('@updateUser');
     settingsPage.visit();
     settingsPage.emailField.should('have.value', newEmail);
   });
