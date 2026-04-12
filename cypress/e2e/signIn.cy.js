@@ -12,11 +12,13 @@ describe('Sign In page', () => {
     });
   });
 
-  it('should provide ability to log in with existing credentials', function() {
+it('should provide ability to log in', () => {
+  cy.get('@user').then((user) => { 
     signInPage.visit();
-    signInPage.login(this.user.email, this.user.password);
-    cy.get('.nav-link').should('contain', this.user.username);
+    signInPage.login(user.email, user.password);
+    cy.get('.nav-link').should('contain', user.username);
   });
+});
 
   it('should not log in with wrong credentials', function() {
     signInPage.visit();

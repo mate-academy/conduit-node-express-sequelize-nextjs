@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 import { settingsPage } from '../support/PageObject';
 
-
 Cypress.on('uncaught:exception', (err, runnable) => {
   if (err.message.includes('fetch is not defined')) {
     return false;
@@ -12,15 +11,18 @@ describe('Settings page', () => {
   let user;
 
   beforeEach(() => {
+
     cy.task('db:clear');
+    
     cy.task('generateUser').then((res) => {
       user = res;
-
       cy.register(user.email, user.username, user.password);
+
       cy.login(user.email, user.username, user.password);
       
-
-      settingsPage.visit(); 
+      
+      cy.visit('/');
+      settingsPage.visit();
     });
   });
 
@@ -30,25 +32,24 @@ describe('Settings page', () => {
     settingsPage.usernameField.clear().type(newUsername);
     settingsPage.updateButton.click();
 
-
     cy.url({ timeout: 10000 }).should('include', `/profile/${newUsername}`);
-    cy.get('.navbar').should('contain', newUsername);
+    cy.get('.navbar', { timeout: 10000 }).should('contain', newUsername);
   });
 
   it('should provide an ability to update bio', () => {
-    const newBio = 'I am a new bio';
+    const newBio = 'I am a new bio ' + Math.random(); // Додаємо рандом, щоб уникнути кешування
     
     settingsPage.bioField.clear().type(newBio);
     settingsPage.updateButton.click();
 
-    cy.url().should('not.include', 'editing'); 
+    cy.url().should('not.include', '/settings'); 
 
     cy.visit(`/profile/${user.username}`);
     cy.get('.user-info', { timeout: 10000 }).should('contain', newBio);
   });
 
   it('should provide an ability to update an email', () => {
-    const newEmail = 'new' + user.email;
+    const newEmail = 'new_' + user.email;
     
     settingsPage.emailField.clear().type(newEmail);
     settingsPage.updateButton.click();
@@ -67,13 +68,14 @@ describe('Settings page', () => {
     settingsPage.passwordField.clear().type(newPassword);
     settingsPage.updateButton.click();
 
+
     cy.url().should('not.include', '/settings');
     
-    cy.get('.nav-link').contains('Logout').click();
+
+    cy.get('.nav-link').contains('Logout').should('be.visible').click();
     
-  
-    cy.login(user.email, user.username, newPassword);
+       cy.login(user.email, user.username, newPassword);
     cy.visit('/');
-    cy.get('.navbar').should('contain', user.username);
+    cy.get('.navbar', { timeout: 10000 }).should('contain', user.username);
   });
 });

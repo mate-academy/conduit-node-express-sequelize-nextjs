@@ -1,44 +1,22 @@
 import PageObject from '../PageObject';
 
 class SettingsPageObject extends PageObject {
-  url = '/settings';
-
-  get usernameField() {
-    return cy.getByDataCy('username');
+  constructor() {
+    super();
+    this.url = '/settings';
   }
 
-  get bioField() {
-    return cy.getByDataCy('bio');
-  }
 
-  get emailField() {
-    return cy.getByDataCy('email');
-  }
+  get usernameField() { return cy.getByDataCy('username-settings'); }
+  get bioField()      { return cy.getByDataCy('bio-settings'); }
+  get emailField()    { return cy.getByDataCy('email-settings'); }
+  get passwordField() { return cy.getByDataCy('password-settings'); }
+  get updateButton()  { return cy.get('button[type="submit"]'); }
 
-  get passwordField() {
-    return cy.getByDataCy('password');
-  }
-
-  get submitBtn() {
-    return cy.getByDataCy('submit');
-  }
-
-  get logoutBtn() {
-    return cy.getByDataCy('logout');
-  }
-
-  updateField(fieldGetter, value) {
-    this[fieldGetter].should('be.visible').clear();
-    this[fieldGetter].type(value);
-  }
-
-  clickSubmit() {
-    this.submitBtn.should('be.visible').click();
-  }
-
-  clickLogout() {
-    this.logoutBtn.should('be.visible').click();
+  visit() {
+    cy.visit(this.url);
+    cy.url().should('include', '/settings');
   }
 }
 
-export default SettingsPageObject;
+export const settingsPage = new SettingsPageObject();

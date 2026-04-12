@@ -31,7 +31,6 @@ class SettingsPageObject extends PageObject {
     return cy.get('textarea[placeholder="Short bio about you"]'); 
   }
 
-  // Використовуємо placeholder замість type, бо це надійніше на цій сторінці
   get emailField() { 
     return cy.get('input[placeholder="Email"]'); 
   }
@@ -41,7 +40,7 @@ class SettingsPageObject extends PageObject {
   }
 
   get updateButton() { 
-    // Додаємо contains для надійності, якщо на сторінці раптом дві кнопки submit
+    
     return cy.get('button[type="submit"]').contains('Update Settings'); 
   }
 }
