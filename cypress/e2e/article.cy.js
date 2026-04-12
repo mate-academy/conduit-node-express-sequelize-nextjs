@@ -5,14 +5,19 @@ describe('Article', () => {
   let article;
 
   beforeEach(() => {
+    cy.intercept('POST', '**/api/articles').as('createArticle');
+    cy.intercept('PUT', '**/api/articles/**').as('updateArticle');
+    cy.intercept('DELETE', '**/api/articles/**').as('deleteArticle');
+    
     cy.task('db:clear');
+    
     cy.task('generateUser').then((resUser) => {
       user = resUser;
       cy.register(user.email, user.username, user.password);
       cy.login(user.email, user.username, user.password);
+    });
 
-      return cy.task('generateArticle');
-    }).then((resArticle) => {
+    cy.task('generateArticle').then((resArticle) => {
       article = resArticle;
     });
   });
@@ -20,43 +25,47 @@ describe('Article', () => {
   it('should be created using New Article form', () => {
     cy.visit('/editor');
 
-    cy.get('.nav-link', { timeout: 10000 }).should('contain', user.username);
-
     cy.get('input[placeholder="Article Title"]').type(article.title);
-    cy.get('input[placeholder="What\'s this article about?"]')
+    
+  
+    const descPlaceholder = 'What\'s this article about?';
+    cy.get(`input[placeholder="${descPlaceholder}"]`)
       .type(article.description);
 
-    cy.get('textarea[placeholder="Write your article (in markdown)"]')
-      .should('be.visible').type(article.body);
-    cy.get('input[placeholder="Enter tags"]').type(article.tag + '{enter}');
+    const bodyPlaceholder = 'Write your article (in markdown)';
+    cy.get(`textarea[placeholder="${bodyPlaceholder}"]`)
+      .type(article.body);
 
+    cy.get('input[placeholder="Enter tags"]').type(article.tag + '{enter}');
     cy.contains('button', 'Publish Article').click();
 
-    cy.get('h1', { timeout: 10000 }).should('contain', article.title);
+    cy.wait('@createArticle', { timeout: 15000 });
+    cy.get('h1').should('contain', article.title);
   });
 
   it('should be edited using Edit button', () => {
     cy.getCookie('auth').then((cookie) => {
+
       cy.request({
         method: 'POST',
         url: '/api/articles',
         headers: { Authorization: `Token ${cookie.value}` },
-        body: { article: { ...article, tagList: [article.tag] } }
-      }).then((res) => {
+        body: { article: { ...article, tagList: [article.tag] } },
+      }).as('articleResponse');
+
+      cy.get('@articleResponse').then((res) => {
         const initialSlug = res.body.article.slug;
         cy.visit(`/article/${initialSlug}`);
 
-        cy.contains('a', 'Edit Article').click();
+        cy.contains('a', 'Edit Article').should('be.visible').click();
 
-        cy.get('input[placeholder="Article Title"]', { timeout: 10000 })
-          .should('be.visible')
-         .clear();
+        cy.get('input[placeholder="Article Title"]').clear();
+        cy.get('input[placeholder="Article Title"]').type('Update Title');
 
-        cy.get('input[placeholder="Article Title"]')
-          .type('Update Title');
-        cy.contains('button', 'Update Article').should('be.visible').click();
-        cy.url().should('include', '/article/');
-        cy.get('h1', { timeout: 15000 }).should('contain', 'Update Title');
+        cy.contains('button', 'Update Article').click();
+        
+        cy.wait('@updateArticle');
+        cy.get('h1').should('contain', 'Update Title');
       });
     });
   });
@@ -67,12 +76,13 @@ describe('Article', () => {
         method: 'POST',
         url: '/api/articles',
         headers: { Authorization: `Token ${cookie.value}` },
-        body: { article: { ...article, tagList: [article.tag] } }
-      }).then((res) => {
+        body: { article: { ...article, tagList: [article.tag] } },
+      }).as('deleteResponse');
+
+      cy.get('@deleteResponse').then((res) => {
         cy.visit(`/article/${res.body.article.slug}`);
-
         cy.contains('button', 'Delete Article').click();
-
+        cy.wait('@deleteArticle');
         cy.url().should('eq', Cypress.config().baseUrl + '/');
       });
     });

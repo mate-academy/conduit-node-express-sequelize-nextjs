@@ -4,20 +4,46 @@ class PageObject {
   }
 
   get homeLink() {
-    return cy.getByDataCy('home-link');
+    return cy.get('.nav-link').contains('Home');
   }
 
   get settingsLink() {
-    return cy.getByDataCy('settings-link');
+    return cy.get('.nav-link').contains('Settings');
   }
 
   get profileLink() {
-    return cy.getByDataCy('profile-link');
+    return cy.get('.nav-link').contains('Profile');
+  }
+}
+export default PageObject;
+
+class SettingsPageObject extends PageObject {
+  constructor() {
+    super();
+    this.url = '/settings';
   }
 
-  clickSettings() {
-    this.settingsLink.click();
+  get usernameField() { 
+    return cy.get('input[placeholder="Username"]'); 
+  }
+
+  get bioField() {
+    return cy.get('textarea[placeholder="Short bio about you"]'); 
+  }
+
+  // Використовуємо placeholder замість type, бо це надійніше на цій сторінці
+  get emailField() { 
+    return cy.get('input[placeholder="Email"]'); 
+  }
+
+  get passwordField() { 
+    return cy.get('input[placeholder="New Password"]'); 
+  }
+
+  get updateButton() { 
+    // Додаємо contains для надійності, якщо на сторінці раптом дві кнопки submit
+    return cy.get('button[type="submit"]').contains('Update Settings'); 
   }
 }
 
-export default PageObject;
+export const settingsPage = new SettingsPageObject();

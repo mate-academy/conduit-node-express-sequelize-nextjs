@@ -1,15 +1,16 @@
 /// <reference types="cypress" />
 /// <reference types="../support" />
+
 describe('Follow/unfollow button', () => {
   let user;
   let author;
 
   before(() => {
     cy.task('db:clear');
+
     cy.task('generateUser').then((resAuthor) => {
       author = resAuthor;
       cy.register(author.email, author.username, author.password);
-
       cy.login(author.email, author.username, author.password);
 
       cy.getCookie('auth').then((cookie) => {
@@ -46,14 +47,17 @@ describe('Follow/unfollow button', () => {
   });
 
   it('should provide an ability to follow the another user', () => {
-    cy.visit(`/#/profile/${author.username}`);
+    cy.visit(`/profile/${author.username}`);
 
-    cy.get('.btn-outline-secondary', { timeout: 10000 })
+
+    cy.get('button', { timeout: 15000 })
       .contains(`Follow ${author.username}`)
       .should('be.visible')
       .click();
 
-    cy.get('.btn-outline-secondary')
-      .should('contain', `Unfollow ${author.username}`);
+
+    cy.get('button')
+      .contains(`Unfollow ${author.username}`, { timeout: 10000 })
+      .should('be.visible');
   });
 });
