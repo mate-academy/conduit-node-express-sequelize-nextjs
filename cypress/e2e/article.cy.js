@@ -7,10 +7,8 @@ describe('Article', () => {
   beforeEach(() => {
     cy.intercept('POST', '**/api/articles').as('createArticle');
     cy.intercept('PUT', '**/api/articles/**').as('updateArticle');
-    cy.intercept('DELETE', '**/api/articles/**').as('deleteArticle');
     
     cy.task('db:clear');
-
 
     cy.task('generateUser').then((resUser) => {
       user = resUser;
@@ -33,14 +31,13 @@ describe('Article', () => {
     cy.get('input[placeholder="Enter tags"]').type(article.tag + '{enter}');
     cy.contains('button', 'Publish Article').click();
 
-    cy.wait('@createArticle').then((interception) => {
-       expect(interception.response.statusCode).to.eq(200);
-    });
+    cy.wait('@createArticle').its('response.statusCode').should('eq', 200);
     cy.get('h1', { timeout: 15000 }).should('contain', article.title);
   });
 
   it('should be edited using Edit button', function() {
     cy.get('@currentUser').then((currentUser) => {
+
       cy.request({
         method: 'POST',
         url: '/api/articles',
@@ -49,23 +46,25 @@ describe('Article', () => {
       }).then((res) => {
         const slug = res.body.article.slug;
 
-        cy.visit(`/article/${slug}`, { failOnStatusCode: false });
-        cy.get('body').then(($body) => {
-          if ($body.text().includes('404')) {
-            cy.reload(); 
-          }
-        });
+        cy.visit(`/article/${slug}`);
         
         cy.contains('a', 'Edit Article', { timeout: 15000 })
-        .should('be.visible')
-        .click();
+          .should('be.visible')
+          .click();
         
+
+        const updatedTitle = 'Updated Title ' + Math.random(); 
+        cy.get('input[placeholder="Article Title"]').should('be.visible');
         cy.get('input[placeholder="Article Title"]').clear();
-        cy.get('input[placeholder="Article Title"]').type('Updated Title');
+        cy.get('input[placeholder="Article Title"]').type(updatedTitle);
+
         cy.contains('button', 'Update Article').click();
         
-        cy.wait('@updateArticle');
-        cy.get('h1').should('contain', 'Updated Title');
+        cy.wait('@updateArticle')
+        .its('response.statusCode')
+        .should('be.oneOf', [200, 204]);
+        
+        cy.get('h1', { timeout: 10000 }).should('contain', updatedTitle);
       });
     });
   });
