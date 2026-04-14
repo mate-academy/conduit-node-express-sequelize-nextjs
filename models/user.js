@@ -97,7 +97,7 @@ module.exports = (sequelize) => {
       // you want when loading profile settings forms for which we want an empty field.
       image:
         this.image ||
-        'https://static.productionready.io/images/smiley-cyrus.jpg',
+        config.defaultProfileImage,
       following: user ? await user.hasFollow(this.id) : false,
     }
     return data
