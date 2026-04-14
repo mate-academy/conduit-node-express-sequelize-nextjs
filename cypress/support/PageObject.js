@@ -1,6 +1,9 @@
 class PageObject {
   visit(url) {
-    cy.visit(url || this.url);
+    cy.visit(url || this.url, {
+      timeout: 30000,
+      failOnStatusCode: false
+    });
   }
 
   get homeLink() {

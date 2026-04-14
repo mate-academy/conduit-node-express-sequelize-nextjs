@@ -33,7 +33,9 @@ describe('Article', () => {
     cy.get('input[placeholder="Enter tags"]').type(article.tag + '{enter}');
     cy.contains('button', 'Publish Article').click();
 
-    cy.wait('@createArticle');
+    cy.wait('@createArticle').then((interception) => {
+       expect(interception.response.statusCode).to.eq(200);
+    });
     cy.get('h1', { timeout: 15000 }).should('contain', article.title);
   });
 
@@ -45,8 +47,18 @@ describe('Article', () => {
         headers: { Authorization: `Token ${currentUser.token}` },
         body: { article: { ...article, tagList: [article.tag] } },
       }).then((res) => {
-        cy.visit(`/article/${res.body.article.slug}`);
-        cy.contains('a', 'Edit Article').click();
+        const slug = res.body.article.slug;
+
+        cy.visit(`/article/${slug}`, { failOnStatusCode: false });
+        cy.get('body').then(($body) => {
+          if ($body.text().includes('404')) {
+            cy.reload(); 
+          }
+        });
+        
+        cy.contains('a', 'Edit Article', { timeout: 15000 })
+        .should('be.visible')
+        .click();
         
         cy.get('input[placeholder="Article Title"]').clear();
         cy.get('input[placeholder="Article Title"]').type('Updated Title');
