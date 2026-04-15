@@ -414,11 +414,17 @@ router.get(
           { model: req.app.get('sequelize').models.User, as: 'author' },
         ],
       })
+      // Skip comments whose author was deleted (orphans from the weekly
+      // cleanup script — the schema has no ON DELETE CASCADE).
       return res.json({
         comments: await Promise.all(
-          comments.map(function (comment) {
-            return comment.toJson(user)
-          })
+          comments
+            .filter(function (comment) {
+              return comment.author
+            })
+            .map(function (comment) {
+              return comment.toJson(user)
+            })
         ),
       })
     } catch (error) {

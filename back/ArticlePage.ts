@@ -46,8 +46,12 @@ export function getStaticPropsArticle(
     }
     const props: ArticlePageProps = { article: await article.toJson() }
     if (addComments) {
+      // Skip comments whose author was deleted. The sandbox DB has no
+      // ON DELETE CASCADE, so a deleted user leaves orphan comments behind.
       props.comments = await Promise.all(
-        comments.map((comment) => comment.toJson())
+        comments
+          .filter((comment) => comment.author)
+          .map((comment) => comment.toJson())
       )
     }
     const ret: Awaited<ReturnType<GetStaticProps>> = {
