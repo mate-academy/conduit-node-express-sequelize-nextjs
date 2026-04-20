@@ -14,6 +14,7 @@ const NavLink = ({ href, onClick, children }: NavLinkProps) => {
   return (
     <Link href={href} passHref>
       <a
+        data-cy={href}
         onClick={onClick}
         className={`${
           (encodeURIComponent(asPath) === encodeURIComponent(href) &&
