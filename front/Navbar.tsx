@@ -45,7 +45,7 @@ const Navbar = () => {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href={routes.userView(loggedInUser?.username)}>
+              <NavLink href={routes.userView(loggedInUser?.username)} data-cy="username-link">
                 <CustomImage
                   className="user-pic"
                   src={loggedInUser?.effectiveImage}
