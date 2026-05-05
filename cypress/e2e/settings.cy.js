@@ -10,7 +10,6 @@ const homePage = new HomePageObject()
 
 describe('Settings page', () => {
   let user
-  let originalPassword
 
   before(() => {
     cy.task('db:clear')
@@ -20,17 +19,15 @@ describe('Settings page', () => {
     // Generate fresh user for each test to avoid state pollution
     cy.task('generateUser').then((generatedUser) => {
       user = generatedUser
-      originalPassword = generatedUser.password
       cy.register(user.email, user.username, user.password)
       cy.visit('/')
-      cy.login(user.email, user.password)
+      cy.login(user.email, user.username, user.password)
       settingsPage.visit()
     })
   })
 
   it('should provide an ability to update username', () => {
-    const timestamp = Date.now()
-    const newUsername = `user${timestamp}`.toLowerCase()
+    const newUsername = faker.internet.userName().toLowerCase()
 
     // Wait for form to be populated
     settingsPage.usernameInput.should('have.value', user.username)
@@ -56,8 +53,7 @@ describe('Settings page', () => {
   })
 
   it('should provide an ability to update an email', () => {
-    const timestamp = Date.now()
-    const newEmail = `test${timestamp}@mail.com`
+    const newEmail = faker.internet.email()
 
     settingsPage.clearAndTypeEmail(newEmail)
     settingsPage.clickUpdateSettingsBtn()
@@ -85,7 +81,7 @@ describe('Settings page', () => {
 
     // Try to login with new password
     cy.visit('/')
-    cy.login(user.email, newPassword)
+    cy.login(user.email, user.username, newPassword)
     settingsPage.visit()
     cy.url().should('include', '/settings')
   })
