@@ -6,14 +6,17 @@ interface NavLinkProps {
   href: string
   onClick?: () => void
   children: React.ReactNode
+  dataCy?: string
 }
 
-const NavLink = ({ href, onClick, children }: NavLinkProps) => {
+const NavLink = ({ href, onClick, children, dataCy }: NavLinkProps) => {
   const router = useRouter()
   const { asPath } = router
+
   return (
     <Link href={href} passHref>
       <a
+        data-cy={dataCy}
         onClick={onClick}
         className={`${
           (encodeURIComponent(asPath) === encodeURIComponent(href) &&

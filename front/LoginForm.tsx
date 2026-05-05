@@ -32,7 +32,7 @@ const LoginForm = ({ register = false }) => {
       if (register) {
         ;({ data, status } = await UserAPI.register(username, email, password))
       } else {
-        ;({ data, status } = await UserAPI.login(email, password))
+        ;({ data, status } = await UserAPI.login(email, password))   
       }
       if (status !== 200 && data?.errors) {
         setErrors(data.errors)
@@ -58,6 +58,7 @@ const LoginForm = ({ register = false }) => {
               <input
                 className="form-control form-control-lg"
                 type="text"
+                data-cy="username-sign-up"
                 placeholder="Username"
                 value={username}
                 onChange={handleUsernameChange}
@@ -67,6 +68,7 @@ const LoginForm = ({ register = false }) => {
           <fieldset className="form-group">
             <input
               className="form-control form-control-lg"
+              data-cy="email-sign-in"
               type="email"
               placeholder="Email"
               value={email}
@@ -76,6 +78,7 @@ const LoginForm = ({ register = false }) => {
           <fieldset className="form-group">
             <input
               className="form-control form-control-lg"
+              data-cy="password-sign-in"
               type="password"
               placeholder="Password"
               value={password}
@@ -83,6 +86,7 @@ const LoginForm = ({ register = false }) => {
             />
           </fieldset>
           <button
+            data-cy="auth-btn"
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
             disabled={isLoading}
