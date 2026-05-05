@@ -27,7 +27,7 @@ describe('Settings page', () => {
   })
 
   it('should provide an ability to update username', () => {
-    const newUsername = faker.internet.userName().toLowerCase()
+    const newUsername = 'user' + faker.string.alphanumeric(5).toLowerCase()
 
     // Wait for form to be populated
     settingsPage.usernameInput.should('have.value', user.username)
@@ -37,6 +37,9 @@ describe('Settings page', () => {
 
     cy.url().should('include', `/profile/${newUsername}`)
     homePage.usernameLink.should('contain', newUsername)
+
+    settingsPage.visit()
+    settingsPage.assertUsernameValue(newUsername)
   })
 
   it('should provide an ability to update bio', () => {

@@ -9,7 +9,7 @@ Cypress.Commands.add(
   'register',
   (
     email = faker.internet.email(),
-    username = faker.internet.userName(),
+    username = 'user' + faker.string.alphanumeric(5).toLowerCase(),
     password = '12345Qwert!',
   ) => {
     cy.request('POST', '/api/users', {
@@ -26,7 +26,7 @@ Cypress.Commands.add(
   'login',
   (
     email = faker.internet.email(),
-    username = faker.internet.userName(),
+    username = 'user' + faker.string.alphanumeric(5).toLowerCase(),
     password = '12345Qwert!',
   ) => {
     cy.request('POST', '/api/users', {
