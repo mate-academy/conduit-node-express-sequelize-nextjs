@@ -7,9 +7,33 @@ class HomePageObject extends PageObject {
     return cy.getByDataCy('profile-link');
   }
 
+  get profileUsername() {
+    return cy.getByDataCy('profile-username');
+  }
+
+  get profileBio() {
+    return cy.getByDataCy('profile-bio');
+  }
+
+  get signInLink() {
+    return cy.getByDataCy('sign-in-link');
+  }
+
   assertHeaderContainUsername(username) {
-    this.usernameLink
-      .should('contain', username);
+    this.usernameLink.should('contain', username);
+  }
+
+  assertProfileUsername(username) {
+    this.profileUsername.should('contain', username);
+  }
+
+  assertProfileBio(bio) {
+    this.profileBio.should('contain', bio);
+  }
+
+  assertUserIsLoggedOut() {
+    this.signInLink.should('be.visible');
+    this.usernameLink.should('not.exist');
   }
 }
 
